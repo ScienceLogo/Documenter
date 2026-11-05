@@ -56,8 +56,8 @@ job that builds and publishes the documentation on every push.
 
 ### Customise
 
-Everything is optional. Without configuration, the Documenter uses its
-standard style (see the next section).
+Everything can be customised. Any setting you don't change keeps its
+default, and the next section explains how the defaults were chosen.
 
 To change it, add `sciencelogo-documenter.toml` at the root of the workflow
 repository, or pass another file with `--config FILE`. The file can set:
@@ -86,167 +86,88 @@ If the marker appears more than once, the first one wins and the build
 warns. A library without the marker is neither mapped nor documented, but
 its procedures still appear wherever the workflow calls them.
 
-## Justification of choices
+## Design defaults
 
-Every layout choice is a parameter. The defaults come from a narrative
-review of research on hypertext comprehension, text signalling, typography,
-colour, communicating uncertainty, and reading on paper and on screen.
+We reviewed the scientific research on reading and understanding hypertexts
+and printed documents. The results below set the defaults, and each finding
+is marked with the strength of its evidence.
 
-Each finding is labelled by strength:
+**Website**
 
-- **strong:** meta-analyses, or consistent results across many studies;
-- **moderate:** several experiments that agree, or one large experiment;
-- **weak:** one small study, or grey literature;
-- **practice:** standards or professional practice, not tested.
+- **Pages of medium size:** one page each for the workflow, its stages and
+  its procedures, with each called procedure summarised on the stage page.
+  Navigating links raises cognitive load (Dillon & Gabbard, 1998;
+  DeStefano & LeFevre, 2007; strong), longer nodes did better (Kim &
+  Eastman, 1999; weak), and page-by-page reading beat long scrolling (Piolat
+  et al., 1997; Sanchez & Wiley, 2009; moderate).
+- **Adjustable page depth:** help that suits novices can hinder experts
+  (Kalyuga et al., 2003; strong).
+- **Nested outline and breadcrumbs:** a visible hierarchy helps readers new
+  to a topic (Potelle & Rouet, 2003; Amadieu et al., 2009; moderate), and
+  breadcrumbs gave a more hierarchical picture of a site (Rogers & Chaparro,
+  2003; weak).
+- **Previous and Next in method order:** a coherent reading order helps
+  readers new to a topic (Salmerón et al., 2005; McNamara et al., 1996;
+  Madrid et al., 2009; moderate).
+- **Search as a complement to the structure:** browsing the structure was
+  faster and more accurate than searching (Hertzum & Frøkjær, 1996; Katz &
+  Byrne, 2003; Teevan et al., 2004; moderate).
+- **Summary first:** each page opens with its `about`, then the key facts,
+  then the verbose code. Headings, overviews and summaries improve memory
+  (Lorch, 1989; Hyönä & Lorch, 2004; Schneider et al., 2018; strong).
+- **Links at first mention, with previews:** readers treat linked words as
+  markers of importance (Fitzsimmons et al., 2019, 2020; moderate) and choose
+  links by their cues (Pirolli & Card, 1999; moderate). Previews made search
+  more efficient (Maes et al., 2006; weak).
+- **Text size:** 1.25 rem (20 px), line height 1.5 and about 70 characters
+  per line. Reading speed peaks over a wide range of sizes (Legge & Bigelow,
+  2011; strong), and comprehension improved up to about 24 px (Rello et al.,
+  2016; moderate).
+- **Fonts:** Atkinson Hyperlegible Next and Mono, for their distinct letter
+  shapes, which reduce misreading (Beier & Larson, 2010; moderate). Serifs
+  make no difference (Arditi & Cho, 2005; moderate).
+- **Font switch:** readers can switch to IBM Plex Serif or Sans, because no
+  font is fastest for everyone (Wallace et al., 2022; moderate).
+- **Light background:** dark text on a light background is more legible
+  (Piepenbrock et al., 2013; Dobres et al., 2016; moderate).
+- **Categories marked by type style, with colour as a second cue:** about
+  8 % of men of European descent have a red-green colour deficiency (Birch,
+  2012; strong). The Okabe–Ito hues stay distinguishable for them (Okabe &
+  Ito, 2008; Wong, 2011; practice; Crameri et al., 2020; strong). Text keeps
+  at least 4.5:1 contrast (WCAG 2.2; practice), and the five categories stay
+  within the limit of 5 to 7 colour codes (Healey, 1996; weak).
+- **No general syntax highlighting:** it did not improve code comprehension
+  (Hannebauer et al., 2018; moderate), and colour coding can hurt as well as
+  help (Christ, 1975; moderate).
+- **Uncertainty next to its value:** a stated range barely reduced trust
+  (van der Bles et al., 2020; moderate). Units follow the SI Brochure and
+  ISO 80000-1 (practice).
 
-No study has tested documentation of scientific workflows, and most
-participants were students. The defaults are therefore well-founded
-starting points, not proven optima. That is why every one of them can be
-changed.
+**Booklet**
 
-### Pages of medium size, not one item per page
-
-There is no evidence that splitting a text into small, one-item pages helps
-comprehension. Following links has a cost: choosing and navigating raise
-cognitive load, and hypertext helps searching more than understanding
-(Dillon & Gabbard, 1998; DeStefano & LeFevre, 2007; strong). Longer nodes
-did better in a retrieval task (Kim & Eastman, 1999; weak). Very long
-scrolling pages also hurt, and page-by-page reading beat scrolling (Piolat
-et al., 1997; Sanchez & Wiley, 2009; moderate). Help that suits novices can
-hinder experts (Kalyuga et al., 2003; strong).
-
-**Default:** one page for each unit that has its own `about`: the workflow,
-each stage and each procedure. A stage page shows each procedure it calls as
-a short block, with a link to the procedure's own page, so the reader
-understands the stage without leaving it. Deeper detail is shown inline.
-
-### Structure, reading order and search
-
-A visible hierarchy improves comprehension for readers new to a topic, and
-does not affect experts (Potelle & Rouet, 2003; Amadieu et al., 2009;
-moderate). A coherent reading order helps the same readers (Salmerón et al.,
-2005; McNamara et al., 1996; moderate), and suggested links help through the
-reading order they create (Madrid et al., 2009; moderate). Breadcrumbs
-reduced use of the Back button and gave a more hierarchical picture of a
-site (Rogers & Chaparro, 2003; weak).
-
-In online documentation, browsing the structure was faster and gave fewer
-errors than searching (Hertzum & Frøkjær, 1996). Site search did not beat
-browsing the menus (Katz & Byrne, 2003), and people prefer small navigation
-steps even when they know their target (Teevan et al., 2004).
-
-**Defaults:**
-
-- an always-visible nested outline of the method that marks the current
-  page, and breadcrumbs under the title;
-- Previous and Next links on every page, in method order, which is the same
-  order as the booklet;
-- a search box on every page, over names, `about` texts and the verbose
-  code, as a complement to the structure and never a substitute for it.
-
-### Summary first, links and previews
-
-Text signals, such as headings, overviews and summaries, improve memory for
-what they mark (Lorch, 1989; Hyönä & Lorch, 2004; Schneider et al., 2018;
-strong). Readers treat linked words as markers of importance and, when
-skimming, process mainly the linked words (Fitzsimmons et al., 2019, 2020;
-moderate). They choose links by the cues these give about the target
-(Pirolli & Card, 1999; moderate), and previews of the target made search
-more efficient (Maes et al., 2006; weak).
-
-**Defaults:**
-
-- each page shows, in order, the title, the `about`, a block of facts
-  (performer, inputs, result with units, uncertainty), and then the verbose
-  code;
-- a missing `about` is flagged visibly;
-- an item is linked at its first mention in each section;
-- hovering over or focusing a link shows the target's `about`.
-
-### Type
-
-Reading speed is at its maximum over a wide range of text sizes (Legge &
-Bigelow, 2011; strong). On screen, comprehension improved with text up to
-about 24 px (Rello et al., 2016; moderate). Serifs make no meaningful
-difference to legibility (Arditi & Cho, 2005; moderate). Distinct letter
-shapes reduce misreading (Beier & Larson, 2010; moderate). No font is best
-for everyone: each reader's fastest and slowest fonts differed by about
-35 % in reading speed (Wallace et al., 2022; moderate). Dark text on a light
-background is more legible than the reverse (Piepenbrock et al., 2013;
-Dobres et al., 2016; moderate).
-
-**Defaults:**
-
-- **Fonts:** Atkinson Hyperlegible Next for text and Atkinson Hyperlegible
-  Mono for code and values. These were chosen for distinct letter shapes,
-  a large x-height and a marked zero; the font's own design claims have not
-  been tested in peer-reviewed work. Every font must pass a glyph test
-  (`Il1 O0 rn m 5S 8B µ ± × ° ²`) before adoption.
-- **Font switch:** because readers differ, the website lets each reader
-  switch to IBM Plex Serif or IBM Plex Sans, and remembers the choice.
-- **On screen:** a base size of 1.25 rem (20 px) that follows the browser's
-  setting, line height 1.5, and lines of about 70 characters.
-- **On paper:** body text of 10.5 to 11 pt (practice).
-- **Polarity:** a light background, with dark mode only when the reader's
-  system asks for it.
-
-### Colour and categories
-
-About 8 % of men of European descent have a red-green colour deficiency
-(Birch, 2012; strong). The Okabe–Ito palette stays distinguishable for them
-(Okabe & Ito, 2008; Wong, 2011; practice), and red-green contrasts should be
-avoided (Crameri et al., 2020; strong). Colour coding helps readers find
-things but can also hurt (Christ, 1975; moderate), and general syntax
-highlighting did not improve code comprehension (Hannebauer et al., 2018;
-moderate). No more than 5 to 7 colour codes should be used at once (Healey,
-1996; weak). Text needs at least 4.5:1 contrast, and colour must never be
-the only cue (WCAG 2.2; practice).
-
-**Defaults:**
-
-- five categories are marked: stages, performers, procedures, values with
-  units, and uncertainty;
-- each has its own type style, so the meaning survives without colour and
-  in a greyscale print;
-- an Okabe–Ito hue is added as a marker, or as a darkened text colour that
-  passes 4.5:1 and stays distinguishable under simulated colour-vision
-  deficiency;
-- links are underlined rather than given a sixth colour;
-- there is no general syntax highlighting.
-
-### Values and uncertainty
-
-Units follow the SI Brochure and ISO 80000-1 (practice): a non-breaking
-space between number and unit keeps them on one line. Stating uncertainty
-as a numerical range barely reduced trust, and readers did perceive it (van
-der Bles et al., 2020; moderate). **Default:** uncertainty always appears
-next to its value, never only behind a link or a hover.
-
-### The booklet
-
-Comprehension of expository text is better on paper than on screen (Clinton,
-2019; Kong et al., 2018; Delgado et al., 2018; strong), so a method
-description deserves a version designed for careful reading on paper.
-
-**Defaults:**
-
-- **Order:** an overview, then one chapter per stage followed by the
-  procedures only that stage uses, then the shared procedures, the record
-  types and the index. This keeps related content together, following the
-  reading-order findings above.
-- **Two indexes:**
-  - a structural index (table of contents) at the front, which shows the
-    whole method in order with page numbers;
-  - an analytical index at the back, grouped by kind (stages, procedures,
-    performers, record types with their fields, requirements), alphabetical
-    within each kind, with the defining page in bold (ISO 999, practice).
-
-  In e-books, a back-of-book index was faster and more useful for finding
-  information than the table of contents or full-text search (Abdullah &
-  Gibb, 2008, 2009; weak).
-- **Paper:** running titles, PDF bookmarks, page references next to every
-  internal link, and library documentation URLs printed in full. The page
-  size is A4, with A5 as an option.
+- **A booklet for paper:** comprehension is better on paper than on screen
+  (Clinton, 2019; Kong et al., 2018; Delgado et al., 2018; strong).
+- **Method order:** an overview, then one chapter per stage with the
+  procedures it uses, then shared procedures and record types. A coherent
+  order helps, as on the website (Salmerón et al., 2005; moderate).
+- **Summary first:** each section opens with its `about`, as on the website
+  (Lorch, 1989; strong).
+- **Two indexes:** a structural index at the front and an analytical index by
+  kind at the back. A back-of-book index beat the table of contents and
+  search for finding information (Abdullah & Gibb, 2008, 2009; weak), and
+  the index follows ISO 999 (practice).
+- **Text size:** 10.5 to 11 pt (practice), within the range where reading
+  speed peaks (Legge & Bigelow, 2011; strong).
+- **Fonts:** the same as on the website, for the same reasons (Beier &
+  Larson, 2010; moderate).
+- **Categories marked by type style:** a greyscale print keeps every
+  category, and colour is only a second cue, as on the website (Birch, 2012;
+  strong).
+- **No general syntax highlighting,** as on the website (Hannebauer et al.,
+  2018; moderate).
+- **Uncertainty next to its value,** as on the website (van der Bles et al.,
+  2020; moderate).
+- **Paper:** A4, with A5 as an option (practice).
 
 ### References
 

@@ -1,5 +1,6 @@
 import unittest
 
+from sciencelogo_documenter import versions
 from sciencelogo_documenter.versions import racket_tarball
 
 
@@ -13,6 +14,10 @@ class VersionsTest(unittest.TestCase):
     def test_unknown_platform(self):
         with self.assertRaises(ValueError):
             racket_tarball("no-such-platform")
+
+    def test_sciencelogo_is_pinned_to_a_release(self):
+        self.assertIn(f"/releases/download/{versions.SCIENCELOGO_RELEASE}/", versions.SCIENCELOGO_URL)
+        self.assertEqual(len(versions.SCIENCELOGO_CHECKSUM), 40)
 
 
 if __name__ == "__main__":

@@ -13,7 +13,9 @@ license-files = ["LICENSE"]
 authors = [
   { name = "Riccardo Boero" }
 ]
-dependencies = []
+dependencies = [
+  "typst>=0.15.2,<0.16",
+]
 keywords = ["sciencelogo", "workflow", "documentation", "static-site", "pdf"]
 classifiers = [
   "Development Status :: 2 - Pre-Alpha",
@@ -42,4 +44,8 @@ version = { attr = "sciencelogo_documenter.__version__" }
 where = ["src"]
 
 [tool.setuptools.package-data]
-sciencelogo_documenter = ["racket/**/*.rkt"]
+sciencelogo_documenter = [
+  "racket/*.rkt",
+  "static/*",
+  "fonts/**/*",
+]

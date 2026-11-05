@@ -13,9 +13,13 @@ RACKET_TARBALLS = {
     ),
 }
 
-# The catalog source of `sciencelogo` follows the latest release,
-# so each Documenter release pins the checksum it was tested with.
-SCIENCELOGO_PACKAGE = "sciencelogo"
+# The `sciencelogo` Racket package, from a fixed release of the language,
+# with the package checksum published for that release.
+SCIENCELOGO_RELEASE = "v0.1"
+SCIENCELOGO_URL = (
+    "https://github.com/ScienceLogo/Language/releases/download/"
+    f"{SCIENCELOGO_RELEASE}/sciencelogo.zip"
+)
 SCIENCELOGO_CHECKSUM = "04adaefe40a00014c21e600431f7adaef35bf707"
 
 
@@ -26,9 +30,3 @@ def racket_tarball(platform: str) -> tuple[str, str]:
     except KeyError:
         raise ValueError(f"no pinned Racket build for platform {platform!r}") from None
     return RACKET_MIRROR + name, sha256
-
-
-if __name__ == "__main__":
-    import sys
-
-    print(*racket_tarball(sys.argv[1]))

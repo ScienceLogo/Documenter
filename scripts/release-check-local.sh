@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Build the wheel and the sdist, check them, install the wheel in a fresh
-# virtual environment and run the tests against the installed package.
+# virtual environment, run the tests against it and build the example.
 set -eu
 
 PYTHON="${PYTHON:-python}"
@@ -20,16 +20,22 @@ VENV_DIR="$WORK_DIR/venv"
 "$TOOLS_DIR/bin/python" -m build --outdir "$DIST_DIR" "$ROOT_DIR" >/dev/null
 "$TOOLS_DIR/bin/python" -m twine check --strict "$DIST_DIR"/*
 
-if ! tar -tzf "$DIST_DIR"/*.tar.gz | grep -q "/src/sciencelogo_documenter/racket/main.rkt$"; then
-  echo "the sdist does not contain the Racket entry point" >&2
-  exit 1
-fi
+for f in racket/main.rkt static/template.typ fonts/atkinson-hyperlegible-next/OFL.txt; do
+  if ! tar -tzf "$DIST_DIR"/*.tar.gz | grep -q "/src/sciencelogo_documenter/$f$"; then
+    echo "the sdist does not contain $f" >&2
+    exit 1
+  fi
+done
 
 "$PYTHON" -m venv "$VENV_DIR"
-"$VENV_DIR/bin/python" -m pip install --quiet --no-deps "$DIST_DIR"/*.whl
+"$VENV_DIR/bin/python" -m pip install --quiet "$DIST_DIR"/*.whl
 "$VENV_DIR/bin/sciencelogo-documenter" --version
 
 cd "$WORK_DIR"
 env -u PYTHONPATH "$VENV_DIR/bin/python" -m unittest discover -s "$ROOT_DIR/tests/python"
+if [ -n "${SCIENCELOGO_DOCUMENTER_RACKET:-}" ]; then
+  "$VENV_DIR/bin/sciencelogo-documenter" build "$ROOT_DIR/examples/pendulum/workflow.rkt" --out "$WORK_DIR/example"
+  test -f "$WORK_DIR/example/site/booklet.pdf"
+fi
 
 ls "$DIST_DIR"

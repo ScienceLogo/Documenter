@@ -19,13 +19,19 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install pinned Racket
-        run: |
-          ./scripts/install-racket.sh "$RUNNER_TEMP/racket"
-          echo "$RUNNER_TEMP/racket/bin" >> "$GITHUB_PATH"
+      - name: Cache Racket and sciencelogo
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/sciencelogo-documenter
+          key: racket-${{ hashFiles('src/sciencelogo_documenter/versions.py') }}
+
+      - name: Install the package
+        run: python -m pip install -e .
 
       - name: Run validation
         run: ./scripts/validate-local.sh
 
       - name: Run release check
-        run: ./scripts/release-check-local.sh
+        run: |
+          export SCIENCELOGO_DOCUMENTER_RACKET="$(python -m sciencelogo_documenter bootstrap)"
+          ./scripts/release-check-local.sh

@@ -341,5 +341,3 @@ If you use the Documenter in published work, please cite it as:
 
 > Boero, R. (2026). *ScienceLogo Documenter* [Software]. Zenodo.
 > https://doi.org/
-
-The citation metadata are in [CITATION.cff](CITATION.cff).

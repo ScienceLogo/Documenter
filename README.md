@@ -29,8 +29,9 @@ uvx sciencelogo-documenter build workflow.rkt
 ```
 
 `workflow.rkt` is the workflow's entry file. The files it includes are read
-too. The website goes to `site/` and the booklet to `booklet.pdf`, in the
-output folder (`--out DIR`).
+too. The website goes to `site/` in the output folder (`--out DIR`). The
+booklet goes inside it as `site/booklet.pdf`, and every page of the website
+links to it for download.
 
 If the workflow is invalid, the build stops with the reader's message and
 produces nothing.
@@ -50,9 +51,10 @@ The targets are:
 | `gitlab-pages` | the folder that GitLab Pages deploys | GitLab |
 | `dir` | a plain folder | any |
 
-`publish` uses the CI job's own token. It writes only to the publishing
-branch or folder, never to the workflow's files. The intended use is a CI
-job that builds and publishes the documentation on every push.
+Run `publish` after `build`, usually in a CI job on every push. It copies the
+website, booklet included, to the chosen target and never changes the
+workflow's files. In CI
+it uses the job's own token, so you don't need to set up a secret.
 
 ### Customise
 
@@ -89,85 +91,84 @@ its procedures still appear wherever the workflow calls them.
 ## Design defaults
 
 We reviewed the scientific research on reading and understanding hypertexts
-and printed documents. The results below set the defaults, and each finding
-is marked with the strength of its evidence.
+and printed documents. The results below set the defaults.
 
 **Website**
 
 - **Pages of medium size:** one page each for the workflow, its stages and
   its procedures, with each called procedure summarised on the stage page.
   Navigating links raises cognitive load (Dillon & Gabbard, 1998;
-  DeStefano & LeFevre, 2007; strong), longer nodes did better (Kim &
-  Eastman, 1999; weak), and page-by-page reading beat long scrolling (Piolat
-  et al., 1997; Sanchez & Wiley, 2009; moderate).
+  DeStefano & LeFevre, 2007), longer nodes did better (Kim &
+  Eastman, 1999), and page-by-page reading beat long scrolling (Piolat
+  et al., 1997; Sanchez & Wiley, 2009).
 - **Adjustable page depth:** help that suits novices can hinder experts
-  (Kalyuga et al., 2003; strong).
+  (Kalyuga et al., 2003).
 - **Nested outline and breadcrumbs:** a visible hierarchy helps readers new
-  to a topic (Potelle & Rouet, 2003; Amadieu et al., 2009; moderate), and
+  to a topic (Potelle & Rouet, 2003; Amadieu et al., 2009), and
   breadcrumbs gave a more hierarchical picture of a site (Rogers & Chaparro,
-  2003; weak).
+  2003).
 - **Previous and Next in method order:** a coherent reading order helps
   readers new to a topic (Salmerón et al., 2005; McNamara et al., 1996;
-  Madrid et al., 2009; moderate).
+  Madrid et al., 2009).
 - **Search as a complement to the structure:** browsing the structure was
   faster and more accurate than searching (Hertzum & Frøkjær, 1996; Katz &
-  Byrne, 2003; Teevan et al., 2004; moderate).
+  Byrne, 2003; Teevan et al., 2004).
 - **Summary first:** each page opens with its `about`, then the key facts,
   then the verbose code. Headings, overviews and summaries improve memory
-  (Lorch, 1989; Hyönä & Lorch, 2004; Schneider et al., 2018; strong).
+  (Lorch, 1989; Hyönä & Lorch, 2004; Schneider et al., 2018).
 - **Links at first mention, with previews:** readers treat linked words as
-  markers of importance (Fitzsimmons et al., 2019, 2020; moderate) and choose
-  links by their cues (Pirolli & Card, 1999; moderate). Previews made search
-  more efficient (Maes et al., 2006; weak).
+  markers of importance (Fitzsimmons et al., 2019, 2020) and choose
+  links by their cues (Pirolli & Card, 1999). Previews made search
+  more efficient (Maes et al., 2006).
 - **Text size:** 1.25 rem (20 px), line height 1.5 and about 70 characters
   per line. Reading speed peaks over a wide range of sizes (Legge & Bigelow,
-  2011; strong), and comprehension improved up to about 24 px (Rello et al.,
-  2016; moderate).
+  2011), and comprehension improved up to about 24 px (Rello et al.,
+  2016).
 - **Fonts:** Atkinson Hyperlegible Next and Mono, for their distinct letter
-  shapes, which reduce misreading (Beier & Larson, 2010; moderate). Serifs
-  make no difference (Arditi & Cho, 2005; moderate).
+  shapes, which reduce misreading (Beier & Larson, 2010). Serifs
+  make no difference (Arditi & Cho, 2005).
 - **Font switch:** readers can switch to IBM Plex Serif or Sans, because no
-  font is fastest for everyone (Wallace et al., 2022; moderate).
+  font is fastest for everyone (Wallace et al., 2022).
 - **Light background:** dark text on a light background is more legible
-  (Piepenbrock et al., 2013; Dobres et al., 2016; moderate).
+  (Piepenbrock et al., 2013; Dobres et al., 2016).
 - **Categories marked by type style, with colour as a second cue:** about
   8 % of men of European descent have a red-green colour deficiency (Birch,
-  2012; strong). The Okabe–Ito hues stay distinguishable for them (Okabe &
-  Ito, 2008; Wong, 2011; practice; Crameri et al., 2020; strong). Text keeps
-  at least 4.5:1 contrast (WCAG 2.2; practice), and the five categories stay
-  within the limit of 5 to 7 colour codes (Healey, 1996; weak).
+  2012). The Okabe–Ito hues stay distinguishable for them (Okabe &
+  Ito, 2008; Wong, 2011; Crameri et al., 2020). Text keeps
+  at least 4.5:1 contrast (WCAG 2.2), and the five categories stay
+  within the limit of 5 to 7 colour codes (Healey, 1996).
 - **No general syntax highlighting:** it did not improve code comprehension
-  (Hannebauer et al., 2018; moderate), and colour coding can hurt as well as
-  help (Christ, 1975; moderate).
+  (Hannebauer et al., 2018), and colour coding can hurt as well as
+  help (Christ, 1975).
 - **Uncertainty next to its value:** a stated range barely reduced trust
-  (van der Bles et al., 2020; moderate). Units follow the SI Brochure and
-  ISO 80000-1 (practice).
+  (van der Bles et al., 2020). Units follow the SI Brochure and
+  ISO 80000-1.
 
 **Booklet**
 
 - **A booklet for paper:** comprehension is better on paper than on screen
-  (Clinton, 2019; Kong et al., 2018; Delgado et al., 2018; strong).
+  (Clinton, 2019; Kong et al., 2018; Delgado et al., 2018).
 - **Method order:** an overview, then one chapter per stage with the
   procedures it uses, then shared procedures and record types. A coherent
-  order helps, as on the website (Salmerón et al., 2005; moderate).
+  order helps, as on the website (Salmerón et al., 2005).
 - **Summary first:** each section opens with its `about`, as on the website
-  (Lorch, 1989; strong).
+  (Lorch, 1989).
 - **Two indexes:** a structural index at the front and an analytical index by
   kind at the back. A back-of-book index beat the table of contents and
-  search for finding information (Abdullah & Gibb, 2008, 2009; weak), and
-  the index follows ISO 999 (practice).
-- **Text size:** 10.5 to 11 pt (practice), within the range where reading
-  speed peaks (Legge & Bigelow, 2011; strong).
+  search for finding information (Abdullah & Gibb, 2008, 2009), and
+  the index follows ISO 999.
+- **Text size:** 10.5 to 11 pt, within the range where reading
+  speed peaks (Legge & Bigelow, 2011).
 - **Fonts:** the same as on the website, for the same reasons (Beier &
-  Larson, 2010; moderate).
+  Larson, 2010).
 - **Categories marked by type style:** a greyscale print keeps every
-  category, and colour is only a second cue, as on the website (Birch, 2012;
-  strong).
+  category, and colour is only a second cue, as on the website (Birch, 2012).
 - **No general syntax highlighting,** as on the website (Hannebauer et al.,
-  2018; moderate).
+  2018).
 - **Uncertainty next to its value,** as on the website (van der Bles et al.,
-  2020; moderate).
-- **Paper:** A4, with A5 as an option (practice).
+  2020).
+- **Paper:** A4 by default, as the international standard (ISO 216); any
+  other size, such as US Letter or A5, can be set.
 
 ### References
 
@@ -332,9 +333,13 @@ It builds on the work of others:
 - **[Typst](https://typst.app/)** (Apache 2.0), which typesets the booklet.
 - **Atkinson Hyperlegible Next** and **Atkinson Hyperlegible Mono**, by the
   Braille Institute of America, and **IBM Plex**, by IBM. All are under the
-  SIL Open Font License 1.1, and will be bundled with their licence files.
+  SIL Open Font License 1.1, and are bundled with their licence files.
 - **The Okabe–Ito colour palette** (Okabe & Ito, 2008).
 
 The defaults rest on the research listed under [References](#references).
-If you use the Documenter in published work, please cite this repository:
-https://github.com/ScienceLogo/Documenter.
+If you use the Documenter in published work, please cite it as:
+
+> Boero, R. (2026). *ScienceLogo Documenter* [Software]. Zenodo.
+> https://doi.org/
+
+The citation metadata are in [CITATION.cff](CITATION.cff).

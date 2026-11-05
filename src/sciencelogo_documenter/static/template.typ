@@ -43,8 +43,9 @@
   show raw: set text(font: (code-font, "Atkinson Hyperlegible Mono"), size: 0.92em)
   show link: it => it
   set heading(numbering: "1.1")
+  // Chapters start on a new page: booklet.typ breaks the page before each
+  // chapter, so that a label above the heading stays with it.
   show heading.where(level: 1): it => {
-    pagebreak(weak: true)
     v(0.5em)
     block(text(size: 1.7em, it))
     v(0.6em)
@@ -139,6 +140,7 @@
 }
 
 #let analytical-index(kinds) = {
+  pagebreak(weak: true)
   heading(level: 1, numbering: none)[Index]
   context {
     let entries = query(<sl-index>)

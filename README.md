@@ -8,6 +8,10 @@ for human readers:
 - **a PDF booklet** that is read in sequence, with a table of contents and
   an analytical index.
 
+Example: the [website](https://sciencelogo.github.io/Documenter/) and
+[booklet](https://sciencelogo.github.io/Documenter/booklet.pdf) built from the
+pendulum workflow in `examples/pendulum/`.
+
 ## How to use it
 
 ### Requirements

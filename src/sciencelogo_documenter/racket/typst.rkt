@@ -148,6 +148,7 @@
   (emit "#contents()")
 
   ;; Overview
+  (emit "#pagebreak(weak: true)")
   (emit "#heading(level: 1)[Overview] <overview>")
   (emit (format "#about-text(~a)" (paragraphs (get doc 'about))))
   (emit "#heading(level: 2)[Method]")
@@ -223,10 +224,12 @@
 
   (define shared (shared-procedures doc))
   (unless (null? shared)
+    (emit "#pagebreak(weak: true)")
     (emit "#heading(level: 1)[Shared procedures]")
     (for ([p (in-list shared)]) (procedure-section p 2)))
 
   (unless (null? (get doc 'record_types))
+    (emit "#pagebreak(weak: true)")
     (emit "#heading(level: 1)[Reference]")
     (for ([r (in-list (get doc 'record_types))])
       (emit (format "#heading(level: 2)[#strong(~a)] <~a>" (ts (get r 'name)) (hash-ref labels (cons 'record (get r 'name)))))

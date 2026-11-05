@@ -1,0 +1,53 @@
+name: Publish To PyPI
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+      - 'v*.*.*-*'
+
+jobs:
+  publish-pypi:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build distributions
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install build twine
+          python -m build
+          python -m twine check dist/*
+
+      - name: Check that the tag matches the package version
+        run: |
+          python - <<'PY'
+          import os
+          import sys
+
+          from packaging.version import Version
+
+          sys.path.insert(0, "src")
+          import sciencelogo_documenter
+
+          tag = os.environ["GITHUB_REF_NAME"].removeprefix("v")
+          version = sciencelogo_documenter.__version__
+          if Version(tag) != Version(version):
+              sys.exit(f"tag {tag} does not match the package version {version}")
+          PY
+
+      - name: Upload to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          python -m twine upload \
+            --repository-url https://upload.pypi.org/legacy/ \
+            dist/*

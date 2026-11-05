@@ -1,0 +1,31 @@
+name: Validate
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install pinned Racket
+        run: |
+          ./scripts/install-racket.sh "$RUNNER_TEMP/racket"
+          echo "$RUNNER_TEMP/racket/bin" >> "$GITHUB_PATH"
+
+      - name: Run validation
+        run: ./scripts/validate-local.sh
+
+      - name: Run release check
+        run: ./scripts/release-check-local.sh

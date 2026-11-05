@@ -344,4 +344,4 @@ The defaults rest on the research listed under [References](#references).
 If you use the Documenter in published work, please cite it as:
 
 > Boero, R. (2026). *ScienceLogo Documenter* [Software]. Zenodo.
-> https://doi.org/
+> https://doi.org/10.5281/zenodo.23990463

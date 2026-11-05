@@ -3,12 +3,17 @@ message: v0.0.1 - First release, building a website and a PDF booklet from a Sci
 title: ScienceLogo Documenter
 version: 0.0.1
 type: software
+doi: 10.5281/zenodo.23990463
 authors:
   - given-names: Riccardo
     family-names: Boero
     email: ribo@nilu.no
     orcid: 'https://orcid.org/0000-0002-7468-9096'
     affiliation: NILU
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.23990463
+    description: This DOI represents all software versions.
 repository-code: 'https://github.com/ScienceLogo/Documenter'
 abstract: >-
   A Python package to publish ScienceLogo workflows as web hypertexts and PDF

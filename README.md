@@ -1,24 +1,9 @@
 # ScienceLogo Documenter
 
-The ScienceLogo Documenter turns a ScienceLogo workflow into two documents
-for human readers:
-
-- **a static website** that is read from the broad description down to the
-  details, where every page opens with its `about` summary;
-- **a PDF booklet** that is read in sequence, with a table of contents and
-  an analytical index.
-
-Both describe the **method**: the workflow, its stages, the procedures they
-call, the performers and the records. They never describe the file layout of
-the source. The output contains no file paths and no references to code.
-
-The Documenter reads the workflow with the ScienceLogo reference
-implementation, the Racket package `sciencelogo`, so it understands exactly
-what the language defines and never reimplements it. It only reads: it never
-edits or runs a workflow.
-
-> **Status: under development.** The package is not yet on PyPI. The
-> commands below describe the interface being built.
+`sciencelogo-documenter` is a Python package that publishes a ScienceLogo
+workflow as a web hypertext and a PDF booklet. Give it the workflow's entry
+file, on your machine or in CI, and it builds both and publishes the site to
+GitHub, GitLab, Forgejo or Codeberg Pages.
 
 ## How to use it
 
@@ -98,22 +83,7 @@ If the marker appears more than once, the first one wins and the build
 warns. A library without the marker is neither mapped nor documented, but
 its procedures still appear wherever the workflow calls them.
 
-### Develop and release
-
-Requirements: Python 3.12 or later, and Racket 9.3 with `rackunit-lib`.
-`scripts/install-racket.sh <folder>` installs the pinned Racket build.
-
-```
-make validate        # unit tests and smoke checks
-make release-check   # build, check and install the wheel and the sdist
-```
-
-To release, set `__version__` in `src/sciencelogo_documenter/__init__.py`,
-update `CHANGELOG.md`, and push a tag `vX.Y.Z` that matches the version.
-The `Publish To PyPI` workflow builds the distributions and uploads them
-with the `PYPI_API_TOKEN` repository secret.
-
-## Why it looks the way it does
+## Justification of choices
 
 Every layout choice is a parameter. The defaults come from a narrative
 review of research on hypertext comprehension, text signalling, typography,

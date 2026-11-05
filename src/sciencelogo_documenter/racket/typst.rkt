@@ -3,7 +3,7 @@
 ;; page numbers of the table of contents, the page references and the index.
 
 (require racket/list racket/string
-         "markup.rkt" "structure.rkt" "values.rkt")
+         "code.rkt" "markup.rkt" "structure.rkt" "values.rkt")
 
 (provide write-booklet)
 
@@ -113,6 +113,15 @@
      (if (get c 'into) (format ", into #raw(~a)" (ts (get c 'into))) "")
      "]"))
 
+  (define names (code-names doc))
+  (define (method-code text)
+    (format "#method-code(~a)"
+            (tarray (for/list ([line (in-list (code-lines text names))])
+                      (tarray (for/list ([tok (in-list line)])
+                                (format "(~a, ~a)"
+                                        (if (car tok) (ts (symbol->string (car tok))) "none")
+                                        (ts (cdr tok)))))))))
+
   (define (facts rows)
     (define kept (filter cdr rows))
     (format "#facts(~a)" (tarray (for/list ([r (in-list kept)]) (format "(~a, ~a)" (tc (car r)) (cdr r))))))
@@ -130,7 +139,7 @@
                                                  ", ")))
             (cons "Calls" (and (pair? (get p 'calls)) (join-content (map (lambda (n) (ref 'procedure n)) (get p 'calls)) ", "))))))
     (unless (string=? (get p 'verbose) "")
-      (emit (format "#method-text(~a)" (ts (get p 'verbose))))))
+      (emit (method-code (get p 'verbose)))))
 
   ;; Preamble
   (emit "#import \"template.typ\": *")
@@ -218,7 +227,7 @@
             (cons "Changes" (and (pair? changes) (format "[#list(~a)]" (string-join (map tc changes) ", "))))
             (cons "Ends with" (and (get s 'exit) (state-block (get s 'exit)))))))
     (unless (string=? (get s 'verbose) "")
-      (emit (format "#method-text(~a)" (ts (get s 'verbose)))))
+      (emit (method-code (get s 'verbose))))
     (for ([p (in-list (stage-procedures doc s))])
       (procedure-section p 2)))
 
@@ -244,7 +253,7 @@
                                              (tc (if (get f 'required) "yes" "no"))))
                                    ", "))))
       (unless (string=? (get r 'verbose) "")
-        (emit (format "#method-text(~a)" (ts (get r 'verbose)))))))
+        (emit (method-code (get r 'verbose))))))
 
   (emit (format "#analytical-index(~a)" (tarray (map ts index-kinds)))))
 

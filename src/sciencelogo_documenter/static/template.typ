@@ -128,6 +128,37 @@
   }
 }
 
+// The method text, with its structure marked: structure words in bold,
+// inputs with a dashed underline, outputs in italics with a solid underline,
+// and the names of stages, procedures and performers in their categories.
+#let code-token(class, s) = {
+  let r = raw(s)
+  if class == "keyword" { text(weight: "bold", r) }
+  else if class == "input" { underline(stroke: (thickness: 0.6pt, dash: "dashed"), offset: 2pt, r) }
+  else if class == "output" { underline(stroke: 0.6pt, offset: 2pt, emph(r)) }
+  else if class == "stage" { marked("stage", r) }
+  else if class == "procedure" { marked("procedure", r) }
+  else if class == "performer" { marked("performer", r) }
+  else { r }
+}
+
+#let method-code(lines) = {
+  block(
+    width: 100%,
+    fill: luma(245),
+    inset: 0.8em,
+    radius: 3pt,
+    breakable: true,
+    {
+      set par(leading: 0.55em, justify: false)
+      for (i, line) in lines.enumerate() {
+        if i > 0 { linebreak() }
+        for t in line { code-token(t.at(0), t.at(1)) }
+      }
+    },
+  )
+}
+
 #let method-text(code) = {
   block(
     width: 100%,

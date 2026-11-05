@@ -6,6 +6,7 @@
 (require racket/list)
 
 (provide get
+         code-names
          stage-procedures
          shared-procedures
          find-named)
@@ -15,6 +16,14 @@
 (define (get h key)
   (define v (hash-ref h key 'null))
   (if (eq? v 'null) #f v))
+
+;; code-names : doc -> (hash/c string symbol)
+;; The names that the method text marks with their category.
+(define (code-names doc)
+  (make-immutable-hash
+   (append (map (lambda (s) (cons (get s 'name) 'stage)) (get doc 'stages))
+           (map (lambda (p) (cons (get p 'name) 'procedure)) (get doc 'procedures))
+           (map (lambda (p) (cons (get p 'name) 'performer)) (get doc 'performers)))))
 
 (define (find-named items name)
   (findf (lambda (i) (equal? (get i 'name) name)) items))

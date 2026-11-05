@@ -100,6 +100,12 @@ th, td { text-align: left; padding: 0.25rem 0.75rem; border-bottom: 1px solid va
 .cat-uncertainty { text-decoration: underline dotted var(--cat-uncertainty) 2px; text-underline-offset: 0.2em; }
 pre .cat-stage, pre .cat-performer, pre .cat-procedure { font-variant: normal; }
 
+/* Structure of the method text: structure words in bold, inputs with a
+   dashed underline, outputs in italics with a solid underline. */
+pre .code-keyword { font-weight: 700; }
+pre .code-input { text-decoration: underline dashed 1px; text-underline-offset: 0.2em; }
+pre .code-output { font-style: italic; text-decoration: underline solid 1px; text-underline-offset: 0.2em; }
+
 /* Reading order */
 .sequence { display: flex; justify-content: space-between; gap: 1rem; margin: 3rem 0 2rem; padding-top: 1rem; border-top: 1px solid var(--border); }
 .sequence a { display: flex; flex-direction: column; }

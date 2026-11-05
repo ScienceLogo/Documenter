@@ -5,7 +5,7 @@
 ;; previews and the font switch; every page works without it.
 
 (require racket/file racket/list racket/path racket/string json
-         "markup.rkt" "structure.rkt" "values.rkt")
+         "code.rkt" "markup.rkt" "structure.rkt" "values.rkt")
 
 (provide render-site)
 
@@ -242,21 +242,23 @@
            (tag 'h2 '() "Method text")
            (tag 'pre '() (tag 'code '() (mark-code ctx doc text))))))
 
-;; Marks the names of stages, procedures and performers in code. Strings and
-;; comments are left as they are.
+;; Marks the structure of the method text: structure words, inputs,
+;; outputs, and the names of stages, procedures and performers.
 (define (mark-code ctx doc text)
-  (define names
-    (append (map (lambda (s) (cons (get s 'name) "cat-stage")) (get doc 'stages))
-            (map (lambda (p) (cons (get p 'name) "cat-procedure")) (get doc 'procedures))
-            (map (lambda (p) (cons (get p 'name) "cat-performer")) (get doc 'performers))))
-  (define table (make-immutable-hash names))
-  (define parts (regexp-match* #px"\"(?:[^\"\\\\]|\\\\.)*\"|;[^\n]*|[^\\s\\[\\]()\"]+|[\\s\\S]" text))
-  (apply string-append
-         (for/list ([part (in-list parts)])
-           (define class (and (not (regexp-match? #rx"^[\";]" part)) (hash-ref table part #f)))
-           (if class
-               (tag 'span (list (cons 'class class)) (esc part))
-               (esc part)))))
+  (define names (code-names doc))
+  (string-join
+   (for/list ([line (in-list (code-lines text names))])
+     (apply string-append
+            (for/list ([tok (in-list line)])
+              (define class (and (car tok) (hash-ref code-classes (car tok))))
+              (if class
+                  (tag 'span (list (cons 'class class)) (esc (cdr tok)))
+                  (esc (cdr tok))))))
+   "\n"))
+
+(define code-classes
+  (hasheq 'stage "cat-stage" 'procedure "cat-procedure" 'performer "cat-performer"
+          'keyword "code-keyword" 'input "code-input" 'output "code-output"))
 
 (define (call-html ctx c)
   (string-append

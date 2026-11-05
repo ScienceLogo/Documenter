@@ -1,9 +1,12 @@
 # ScienceLogo Documenter
 
-`sciencelogo-documenter` is a Python package that publishes a ScienceLogo
-workflow as a web hypertext and a PDF booklet. Give it the workflow's entry
-file, on your machine or in CI, and it builds both and publishes the site to
-GitHub, GitLab, Forgejo or Codeberg Pages.
+The ScienceLogo Documenter turns a ScienceLogo workflow into two documents
+for human readers:
+
+- **a static website** that is read from the broad description down to the
+  details, where every page opens with its `about` summary;
+- **a PDF booklet** that is read in sequence, with a table of contents and
+  an analytical index.
 
 ## How to use it
 

@@ -113,7 +113,7 @@ pre .code-output { font-style: italic; text-decoration: underline solid 1px; tex
 
 /* Reading order */
 .sequence { display: flex; justify-content: space-between; gap: 1rem; margin: 3rem 0 2rem; padding-top: 1rem; border-top: 1px solid var(--border); }
-.sequence a { display: flex; flex-direction: column; }
+.sequence > a { display: flex; flex-direction: column; }
 .sequence .next { margin-left: auto; text-align: right; }
 .direction { font-size: 0.9rem; color: var(--muted); }
 

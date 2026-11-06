@@ -1,0 +1,163 @@
+:root {
+  --font-text: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible Next", system-ui, sans-serif;
+  --font-code: "Atkinson Hyperlegible Mono", "Atkinson Hyperlegible Mono", ui-monospace, monospace;
+  --background: #ffffff;
+  --muted: #555555;
+  --text: #1a1a1a;
+  --link: #1d4f91;
+  --code-background: #f4f4f4;
+  --border: #d0d0d0;
+  --cat-stage: #0072B2;
+  --cat-performer: #E69F00;
+  --cat-procedure: #009E73;
+  --cat-uncertainty: #D55E00;
+}
+@media (prefers-color-scheme: dark) {
+:root {
+  --background: #121212;
+  --muted: #b0b0b0;
+  --text: #ececec;
+  --link: #8ab4f8;
+  --code-background: #1e1e1e;
+  --border: #3a3a3a;
+  --cat-stage: #56B4E9;
+  --cat-performer: #E69F00;
+  --cat-procedure: #009E73;
+  --cat-uncertainty: #D55E00;
+}
+}
+/* Standard style of the ScienceLogo Documenter website.
+   Colours and fonts come from the variables set above this rule set. */
+
+@font-face { font-family: "Atkinson Hyperlegible Next"; src: url("../fonts/atkinson-hyperlegible-next/AtkinsonHyperlegibleNext-Regular.ttf"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Atkinson Hyperlegible Next"; src: url("../fonts/atkinson-hyperlegible-next/AtkinsonHyperlegibleNext-Italic.ttf"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Atkinson Hyperlegible Next"; src: url("../fonts/atkinson-hyperlegible-next/AtkinsonHyperlegibleNext-Bold.ttf"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Atkinson Hyperlegible Next"; src: url("../fonts/atkinson-hyperlegible-next/AtkinsonHyperlegibleNext-BoldItalic.ttf"); font-weight: 700; font-style: italic; font-display: swap; }
+@font-face { font-family: "Atkinson Hyperlegible Mono"; src: url("../fonts/atkinson-hyperlegible-mono/AtkinsonHyperlegibleMono-Regular.ttf"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Atkinson Hyperlegible Mono"; src: url("../fonts/atkinson-hyperlegible-mono/AtkinsonHyperlegibleMono-Italic.ttf"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Atkinson Hyperlegible Mono"; src: url("../fonts/atkinson-hyperlegible-mono/AtkinsonHyperlegibleMono-Bold.ttf"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "IBM Plex Serif"; src: url("../fonts/ibm-plex-serif/IBMPlexSerif-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "IBM Plex Serif"; src: url("../fonts/ibm-plex-serif/IBMPlexSerif-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "IBM Plex Serif"; src: url("../fonts/ibm-plex-serif/IBMPlexSerif-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "IBM Plex Serif"; src: url("../fonts/ibm-plex-serif/IBMPlexSerif-BoldItalic.woff2") format("woff2"); font-weight: 700; font-style: italic; font-display: swap; }
+@font-face { font-family: "IBM Plex Sans"; src: url("../fonts/ibm-plex-sans/IBMPlexSans-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "IBM Plex Sans"; src: url("../fonts/ibm-plex-sans/IBMPlexSans-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "IBM Plex Sans"; src: url("../fonts/ibm-plex-sans/IBMPlexSans-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "IBM Plex Sans"; src: url("../fonts/ibm-plex-sans/IBMPlexSans-BoldItalic.woff2") format("woff2"); font-weight: 700; font-style: italic; font-display: swap; }
+
+html[data-font="plex-serif"] { --font-text: "IBM Plex Serif", Georgia, serif; }
+html[data-font="plex-sans"] { --font-text: "IBM Plex Sans", system-ui, sans-serif; }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { font-size: 100%; }
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  font-family: var(--font-text);
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+code, pre { font-family: var(--font-code); font-size: 0.9em; }
+
+a { color: var(--link); text-decoration: underline; text-underline-offset: 0.15em; }
+a:focus-visible, select:focus-visible, input:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
+
+.skip { position: absolute; left: -999px; }
+.skip:focus { left: 1rem; top: 1rem; background: var(--background); padding: 0.5rem; z-index: 10; }
+
+/* Header */
+.site-header {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem;
+  padding: 0.75rem 1rem; border-bottom: 1px solid var(--border);
+}
+.site-title { font-weight: 700; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+.site-title img { max-height: 2.5rem; width: auto; }
+.tools { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; flex: 1 1 auto; justify-content: flex-end; }
+.booklet-link { white-space: nowrap; }
+
+/* Layout */
+.layout { display: grid; grid-template-columns: minmax(12rem, 18rem) minmax(0, 1fr); gap: 2rem; padding: 1rem; }
+main { max-width: 70ch; min-width: 0; }
+@media (max-width: 52rem) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  .outline { order: 2; border-top: 1px solid var(--border); padding-top: 1rem; }
+}
+
+/* Outline */
+.outline { font-size: 1rem; }
+.outline ul { list-style: none; padding-left: 1rem; margin: 0.25rem 0; }
+.outline > ul { padding-left: 0; }
+.outline a[aria-current="page"] { font-weight: 700; text-decoration-thickness: 3px; }
+@media (min-width: 52rem) { .outline { position: sticky; top: 1rem; align-self: start; max-height: calc(100vh - 2rem); overflow: auto; } }
+
+/* Page */
+.kind { margin: 1rem 0 0; color: var(--muted); font-size: 1rem; text-transform: uppercase; letter-spacing: 0.05em; }
+h1 { margin: 0.25rem 0 0.5rem; line-height: 1.2; }
+h2 { margin-top: 2rem; line-height: 1.25; }
+.breadcrumbs ol { list-style: none; padding: 0; margin: 0 0 1.5rem; display: flex; flex-wrap: wrap; gap: 0.25rem; font-size: 1rem; color: var(--muted); }
+.breadcrumbs li + li::before { content: "›"; margin-right: 0.25rem; }
+.about { font-size: 1.1em; }
+.missing-about { color: var(--muted); font-style: italic; }
+
+.facts dl, dl.performers { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.5rem 1rem; }
+.facts dt, dl.performers dt { font-weight: 700; }
+.facts dd, dl.performers dd { margin: 0; }
+.facts ol, .facts ul { margin: 0; padding-left: 1.25rem; }
+dl.record { margin: 0; padding-left: 0.75rem; border-left: 2px solid var(--border); display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0 0.75rem; }
+dl.record dt { font-weight: 400; color: var(--muted); }
+dl.record dd { margin: 0; }
+
+.value { font-variant-numeric: tabular-nums; }
+.unit { font-style: normal; }
+.unknown { color: var(--muted); font-style: italic; }
+
+pre { background: var(--code-background); padding: 1rem; overflow-x: auto; border-radius: 4px; line-height: 1.4; }
+.procedure-summary, .procedure-block { border-left: 4px solid var(--cat-procedure); padding-left: 1rem; margin: 1.5rem 0; }
+table { border-collapse: collapse; }
+th, td { text-align: left; padding: 0.25rem 0.75rem; border-bottom: 1px solid var(--border); }
+
+/* Categories: the type style carries the meaning; colour is a second cue. */
+.cat-stage { font-weight: 700; font-variant: small-caps; box-shadow: inset 0 -0.2em 0 var(--cat-stage); }
+.cat-performer { font-style: italic; box-shadow: inset 0 -0.2em 0 var(--cat-performer); }
+.cat-procedure, code.cat-procedure { font-family: var(--font-code); box-shadow: inset 0 -0.2em 0 var(--cat-procedure); }
+.cat-record { font-weight: 700; }
+.cat-uncertainty { text-decoration: underline dotted var(--cat-uncertainty) 2px; text-underline-offset: 0.2em; }
+pre .cat-stage, pre .cat-performer, pre .cat-procedure { font-variant: normal; }
+
+/* Structure of the method text: structure words in bold, inputs with a
+   dashed underline, outputs in italics with a solid underline. */
+pre .code-keyword { font-weight: 700; }
+pre .code-input { text-decoration: underline dashed 1px; text-underline-offset: 0.2em; }
+pre .code-output { font-style: italic; text-decoration: underline solid 1px; text-underline-offset: 0.2em; }
+
+/* The language note on the overview page */
+.language-note { display: flex; align-items: center; gap: 0.75rem; margin: 0; font-size: 1rem; color: var(--muted); }
+.language-note img { height: 2.25rem; width: auto; }
+@media (prefers-color-scheme: dark) { .language-note img { background: #ffffff; border-radius: 4px; padding: 2px; } }
+
+/* Reading order */
+.sequence { display: flex; justify-content: space-between; gap: 1rem; margin: 3rem 0 2rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+.sequence > a { display: flex; flex-direction: column; }
+.sequence .next { margin-left: auto; text-align: right; }
+.direction { font-size: 0.9rem; color: var(--muted); }
+
+/* Search, font switch and previews (added by site.js) */
+.search { position: relative; }
+.search input { font: inherit; font-size: 1rem; padding: 0.3rem 0.5rem; width: 14rem; max-width: 100%; color: var(--text); background: var(--background); border: 1px solid var(--muted); border-radius: 4px; }
+.search-results { position: absolute; right: 0; top: 100%; z-index: 20; width: min(28rem, 90vw); max-height: 70vh; overflow: auto; margin: 0.25rem 0 0; padding: 0.5rem; list-style: none; background: var(--background); border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; }
+.search-results:empty { display: none; }
+.search-results li { padding: 0.25rem 0; }
+.search-results small { color: var(--muted); display: block; }
+.font-switch select { font: inherit; font-size: 1rem; color: var(--text); background: var(--background); border: 1px solid var(--muted); border-radius: 4px; }
+.font-switch label { font-size: 1rem; margin-right: 0.25rem; }
+.preview { position: absolute; z-index: 30; max-width: 24rem; padding: 0.5rem 0.75rem; background: var(--background); color: var(--text); border: 1px solid var(--muted); border-radius: 4px; font-size: 1rem; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media print {
+  .outline, .tools, .sequence, .skip { display: none; }
+  .layout { display: block; }
+}

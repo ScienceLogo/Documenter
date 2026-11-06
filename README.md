@@ -332,16 +332,13 @@ The ScienceLogo Documenter is released under the MIT licence, copyright
 
 It builds on the work of others:
 
-- **[ScienceLogo](https://github.com/ScienceLogo/Language)**, the language
-  and its reference implementation, the Racket package `sciencelogo` (MIT).
-  The package is downloaded at first use, not redistributed; the ScienceLogo
-  favicon is bundled.
-- **[Racket](https://racket-lang.org/)** (MIT or Apache 2.0), downloaded at
-  first use, not redistributed.
-- **[Typst](https://typst.app/)** (Apache 2.0), which typesets the booklet.
+- **[ScienceLogo](https://sciencelogo.org/)**, the language and its reference
+  implementation, the Racket package `sciencelogo` (MIT).
+- **[Racket](https://racket-lang.org/)** (MIT or Apache 2.0).
+- **[Typst](https://typst.app/)** (Apache 2.0).
 - **Atkinson Hyperlegible Next** and **Atkinson Hyperlegible Mono**, by the
   Braille Institute of America, and **IBM Plex**, by IBM. All are under the
-  SIL Open Font License 1.1, and are bundled with their licence files.
+  SIL Open Font License 1.1.
 - **The Okabe–Ito colour palette** (Okabe & Ito, 2008).
 
 The defaults rest on the research listed under [References](#references).

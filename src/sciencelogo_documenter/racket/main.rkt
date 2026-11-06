@@ -41,6 +41,7 @@
                (build-path package-dir "static")
                (build-path package-dir "fonts"))
   (copy-file (build-path package-dir "static" "template.typ") (build-path work-dir "template.typ") #t)
+  (copy-file (build-path package-dir "static" "sciencelogo.png") (build-path work-dir "sciencelogo.png") #t)
   (call-with-output-file (build-path work-dir "booklet.typ") #:exists 'replace
     (lambda (out) (write-booklet doc settings out)))
   (call-with-output-file (build-path work-dir "model.json") #:exists 'replace

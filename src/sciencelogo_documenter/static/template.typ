@@ -62,6 +62,15 @@
   text(size: 2.4em, weight: "bold", title)
   v(1.2em)
   for p in about { par(text(size: 1.15em, p)) }
+  // The language the method is written in, at the foot of the title page.
+  v(1fr)
+  grid(
+    columns: (auto, 1fr),
+    column-gutter: 0.8em,
+    align: horizon,
+    image("sciencelogo.png", height: 1.1cm),
+    text(size: 0.9em)[This method is written in ScienceLogo: #link("https://sciencelogo.github.io/Language/")],
+  )
   pagebreak()
 }
 

@@ -85,6 +85,7 @@
   (make-directory* (build-path site-dir "assets"))
   (copy-directory/files fonts-dir (build-path site-dir "fonts"))
   (copy-file (build-path static-dir "site.js") (build-path site-dir "assets" "site.js"))
+  (copy-file (build-path static-dir "sciencelogo.png") (build-path site-dir "assets" "sciencelogo.png"))
   (with-output-to-file (build-path site-dir "assets" "site.css")
     (lambda () (display (site-css settings (file->string (build-path static-dir "site.css"))))))
   (define logo (get (or (get settings 'site) (hasheq)) 'logo))
@@ -365,10 +366,18 @@
                                 (if (get l 'url)
                                     (string-append ": " (tag 'a (list (cons 'href (get l 'url))) "documentation"))
                                     ""))))))))
+  ;; Said once, on the overview: the language the method is written in.
+  (define language-note
+    (tag 'p '((class . "language-note"))
+         (tag 'img (list (cons 'src (string-append (context-root ctx) "assets/sciencelogo.png"))
+                         (cons 'alt "")))
+         "This method is written in "
+         (tag 'a (list (cons 'href "https://sciencelogo.github.io/Language/")) "ScienceLogo")
+         "."))
   (string-append
    (about-block (get doc 'about))
    (tag 'section '() (tag 'h2 '() "Method") outline)
-   performers propositions requirements shared libraries))
+   performers propositions requirements shared libraries language-note))
 
 (define (requirement-html ctx r)
   (define targets (get r 'targets))

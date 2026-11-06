@@ -93,6 +93,13 @@
          (let ([name (format "logo~a" (or (path-get-extension logo) #""))])
            (copy-file logo (build-path site-dir "assets" name))
            (format "assets/~a" name))))
+;; The favicon: the ScienceLogo one unless the settings name another.
+  (define favicon-source
+    (or (get (or (get settings 'site) (hasheq)) 'favicon) (build-path static-dir "favicon.svg")))
+  (define favicon-url
+    (let ([name (format "favicon~a" (or (path-get-extension favicon-source) #".svg"))])
+      (copy-file favicon-source (build-path site-dir "assets" name))
+      (format "assets/~a" name)))
   (with-output-to-file (build-path site-dir "assets" "search-index.js")
     (lambda () (display (search-index doc sequence target))))
 
@@ -111,7 +118,7 @@
     (make-directory* (path-only out))
     (with-output-to-file out
       (lambda ()
-        (display (layout doc p body root title logo-url sequence page-by-key previous next
+        (display (layout doc p body root title logo-url favicon-url sequence page-by-key previous next
                          procedure-pages?))))))
 
 (define (slug-of* items name)
@@ -478,7 +485,7 @@
 ;; ---------------------------------------------------------------------------
 ;; Frame: header, outline, breadcrumbs and sequence links
 
-(define (layout doc p body root title logo-url sequence page-by-key previous next procedure-pages?)
+(define (layout doc p body root title logo-url favicon-url sequence page-by-key previous next procedure-pages?)
   (define (href q) (string-append root (page-url q)))
   (define (outline-link q)
     (define current? (equal? (page-key q) (page-key p)))
@@ -545,6 +552,8 @@
              (tag 'meta '((name . "viewport") (content . "width=device-width, initial-scale=1")))
              (tag 'title '() (esc (if (equal? (page-key p) '(overview)) title
                                       (format "~a – ~a" (page-title p) title))))
+             (tag 'link (list (cons 'rel "icon") (cons 'href (string-append root favicon-url))
+                              (cons 'type (and (regexp-match? #rx"[.]svg$" favicon-url) "image/svg+xml"))))
              (tag 'link (list (cons 'rel "stylesheet") (cons 'href (string-append root "assets/site.css"))))
              (tag 'script (list (cons 'defer "") (cons 'src (string-append root "assets/search-index.js"))))
              (tag 'script (list (cons 'defer "") (cons 'src (string-append root "assets/site.js")))))

@@ -1,5 +1,7 @@
 # ScienceLogo Documenter
 
+<a href="https://sciencelogo.github.io/Language/"><img src="https://raw.githubusercontent.com/ScienceLogo/Language/main/assets/logo.png" alt="ScienceLogo" width="120"></a>
+
 The ScienceLogo Documenter turns a ScienceLogo workflow into two documents
 for human readers:
 
@@ -70,7 +72,8 @@ repository, or pass another file with `--config FILE`. The file can set:
 
 - fonts, colours for each category and for the page, in light and dark
   mode;
-- logos for the website header and the booklet title page;
+- logos for the website header and the booklet title page, and the website's
+  favicon;
 - layout parameters, such as page depth and paper size (A4 or A5);
 - index entries;
 - the Racket and `sciencelogo` versions, if you want to try versions other
@@ -331,7 +334,8 @@ It builds on the work of others:
 
 - **[ScienceLogo](https://github.com/ScienceLogo/Language)**, the language
   and its reference implementation, the Racket package `sciencelogo` (MIT).
-  It is downloaded at first use, not redistributed.
+  The package is downloaded at first use, not redistributed; the ScienceLogo
+  favicon is bundled.
 - **[Racket](https://racket-lang.org/)** (MIT or Apache 2.0), downloaded at
   first use, not redistributed.
 - **[Typst](https://typst.app/)** (Apache 2.0), which typesets the booklet.

@@ -19,7 +19,7 @@
   (for ([p '("index.html" "reference.html" "stages/prepare.html" "stages/observe.html"
              "stages/compare.html" "stages/revise.html"
              "procedures/calculate-period.html" "procedures/compare-periods.html"
-             "assets/site.css" "assets/site.js" "assets/search-index.js")])
+             "assets/site.css" "assets/site.js" "assets/search-index.js" "assets/favicon.svg")])
     (check-true (file-exists? (build-path site p)) p)))
 
 (test-case "a page opens with the title, breadcrumbs and about, in that order"
@@ -33,6 +33,10 @@
   (check-true (string-contains? html "href=\"../stages/compare.html\" class=\"cat-stage\" aria-current=\"page\""))
   (check-true (string-contains? html "rel=\"prev\""))
   (check-true (string-contains? html "href=\"../procedures/compare-periods.html\" rel=\"next\"")))
+
+(test-case "pages use the ScienceLogo favicon"
+  (check-true (string-contains? (page "stages/observe.html")
+                                "<link rel=\"icon\" href=\"../assets/favicon.svg\" type=\"image/svg+xml\">")))
 
 (test-case "links carry the target's about as a preview"
   (check-true (string-contains? (page "stages/observe.html")

@@ -10,7 +10,7 @@ class PackageDataTest(unittest.TestCase):
             self.assertTrue(PACKAGE.joinpath("racket", name).is_file(), name)
 
     def test_static_files_are_bundled(self):
-        for name in ("site.css", "site.js", "template.typ"):
+        for name in ("site.css", "site.js", "template.typ", "favicon.svg"):
             self.assertTrue(PACKAGE.joinpath("static", name).is_file(), name)
 
     def test_fonts_are_bundled_with_their_licences(self):

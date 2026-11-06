@@ -12,7 +12,7 @@ CONFIG_NAME = "sciencelogo-documenter.toml"
 # markers next to a type style that carries the meaning on its own.
 DEFAULTS: dict = {
     "title": None,
-    "site": {"logo": None},
+    "site": {"logo": None, "favicon": None},
     "layout": {"page_depth": 3},
     "booklet": {"paper": "a4", "body_size": "10.5pt", "logo": None},
     "fonts": {
@@ -118,13 +118,13 @@ def load(path: Path | None) -> tuple[dict, list[str]]:
             raise ConfigError(f"{path} is not valid TOML: {e}") from None
         settings = _merge(DEFAULTS, data, "", warnings)
         base = path.parent
-        for section in ("site", "booklet"):
-            logo = settings[section].get("logo")
-            if logo:
-                resolved = (base / logo).resolve()
+        for section, key in (("site", "logo"), ("site", "favicon"), ("booklet", "logo")):
+            value = settings[section].get(key)
+            if value:
+                resolved = (base / value).resolve()
                 if not resolved.is_file():
-                    raise ConfigError(f"{section}.logo: {logo} does not exist")
-                settings[section]["logo"] = str(resolved)
+                    raise ConfigError(f"{section}.{key}: {value} does not exist")
+                settings[section][key] = str(resolved)
         faces = []
         for face in settings["fonts"].get("faces") or []:
             if not isinstance(face, dict) or "family" not in face or "file" not in face:

@@ -366,18 +366,10 @@
                                 (if (get l 'url)
                                     (string-append ": " (tag 'a (list (cons 'href (get l 'url))) "documentation"))
                                     ""))))))))
-  ;; Said once, on the overview: the language the method is written in.
-  (define language-note
-    (tag 'p '((class . "language-note"))
-         (tag 'img (list (cons 'src (string-append (context-root ctx) "assets/sciencelogo.png"))
-                         (cons 'alt "")))
-         "This method is written in "
-         (tag 'a (list (cons 'href "https://sciencelogo.github.io/Language/")) "ScienceLogo")
-         "."))
   (string-append
    (about-block (get doc 'about))
    (tag 'section '() (tag 'h2 '() "Method") outline)
-   performers propositions requirements shared libraries language-note))
+   performers propositions requirements shared libraries))
 
 (define (requirement-html ctx r)
   (define targets (get r 'targets))
@@ -540,10 +532,21 @@
                   (tag 'li '((aria-current . "page")) (esc (page-title p)))))))
   (define seq
     (tag 'nav '((class . "sequence") (aria-label . "Reading order"))
-         (if previous
-             (tag 'a (list (cons 'href (href previous)) (cons 'rel "prev"))
-                  (tag 'span '((class . "direction")) "Previous") (esc (page-title previous)))
-             "")
+         (cond
+           [previous
+            (tag 'a (list (cons 'href (href previous)) (cons 'rel "prev"))
+                 (tag 'span '((class . "direction")) "Previous") (esc (page-title previous)))]
+           ;; Said once, on the overview, where there is no previous page:
+           ;; the language the method is written in.
+           [(equal? (page-key p) '(overview))
+            (tag 'p '((class . "language-note"))
+                 (tag 'img (list (cons 'src (string-append root "assets/sciencelogo.png"))
+                                 (cons 'alt "")))
+                 (tag 'span '()
+                      "This method is written in "
+                      (tag 'a (list (cons 'href "https://sciencelogo.github.io/Language/")) "ScienceLogo")
+                      "."))]
+           [else ""])
          (if next
              (tag 'a (list (cons 'href (href next)) (cons 'rel "next") (cons 'class "next"))
                   (tag 'span '((class . "direction")) "Next") (esc (page-title next)))

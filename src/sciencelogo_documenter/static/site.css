@@ -107,7 +107,7 @@ pre .code-input { text-decoration: underline dashed 1px; text-underline-offset: 
 pre .code-output { font-style: italic; text-decoration: underline solid 1px; text-underline-offset: 0.2em; }
 
 /* The language note on the overview page */
-.language-note { display: flex; align-items: center; gap: 0.75rem; margin-top: 3rem; font-size: 1rem; color: var(--muted); }
+.language-note { display: flex; align-items: center; gap: 0.75rem; margin: 0; font-size: 1rem; color: var(--muted); }
 .language-note img { height: 2.25rem; width: auto; }
 @media (prefers-color-scheme: dark) { .language-note img { background: #ffffff; border-radius: 4px; padding: 2px; } }
 

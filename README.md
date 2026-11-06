@@ -1,6 +1,6 @@
 # ScienceLogo Documenter
 
-<a href="https://sciencelogo.github.io/Language/"><img src="https://raw.githubusercontent.com/ScienceLogo/Language/main/assets/logo.png" alt="ScienceLogo" width="120"></a>
+<a href="https://sciencelogo.org/"><img src="https://raw.githubusercontent.com/ScienceLogo/Language/main/assets/logo.png" alt="ScienceLogo" width="120"></a>
 
 The ScienceLogo Documenter turns a ScienceLogo workflow into two documents
 for human readers:

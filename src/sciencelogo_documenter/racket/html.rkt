@@ -544,7 +544,7 @@
                                  (cons 'alt "")))
                  (tag 'span '()
                       "This method is written in "
-                      (tag 'a (list (cons 'href "https://sciencelogo.github.io/Language/")) "ScienceLogo")
+                      (tag 'a (list (cons 'href "https://sciencelogo.org/")) "ScienceLogo")
                       "."))]
            [else ""])
          (if next

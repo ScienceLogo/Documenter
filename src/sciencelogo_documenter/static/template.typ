@@ -69,7 +69,7 @@
     column-gutter: 0.8em,
     align: horizon,
     image("sciencelogo.png", height: 1.1cm),
-    text(size: 0.9em)[This method is written in ScienceLogo: #link("https://sciencelogo.github.io/Language/")],
+    text(size: 0.9em)[This method is written in ScienceLogo: #link("https://sciencelogo.org/")],
   )
   pagebreak()
 }

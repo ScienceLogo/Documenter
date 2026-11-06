@@ -35,7 +35,7 @@
   (check-true (string-contains? html "href=\"../procedures/compare-periods.html\" rel=\"next\"")))
 
 (test-case "the overview, and only the overview, names the language"
-  (check-true (string-contains? (page "index.html") "This method is written in <a href=\"https://sciencelogo.github.io/Language/\">ScienceLogo</a>"))
+  (check-true (string-contains? (page "index.html") "This method is written in <a href=\"https://sciencelogo.org/\">ScienceLogo</a>"))
   (check-true (file-exists? (build-path site "assets" "sciencelogo.png")))
   (check-false (string-contains? (page "stages/observe.html") "language-note")))
 

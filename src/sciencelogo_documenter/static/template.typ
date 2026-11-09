@@ -75,7 +75,7 @@
 }
 
 #let contents() = {
-  outline(title: "Contents", depth: 2, indent: auto)
+  outline(title: "Contents", depth: 3, indent: auto)
 }
 
 // Index entries: kind, name, and whether this is where the item is defined.
@@ -88,6 +88,7 @@
   let c = sl-colours.get().at(colour-key)
   underline(stroke: 1.5pt + c, offset: 2.5pt, evade: false, body)
 }
+#let phase-name(name) = text(weight: "bold", tracking: 0.04em, upper(name))
 #let stage-name(name) = marked("stage", text(weight: "bold", smallcaps(name)))
 #let performer-name(name) = marked("performer", emph(name))
 #let procedure-name(name) = marked("procedure", raw(name))
@@ -97,7 +98,8 @@
 }
 
 #let styled(kind, name) = {
-  if kind == "Stages" { stage-name(name) }
+  if kind == "Phases" { phase-name(name) }
+  else if kind == "Stages" { stage-name(name) }
   else if kind == "Procedures" { procedure-name(name) }
   else if kind == "Performers" { performer-name(name) }
   else if kind == "Record types" { strong(name) }
@@ -145,6 +147,7 @@
   if class == "keyword" { text(weight: "bold", r) }
   else if class == "input" { underline(stroke: (thickness: 0.6pt, dash: "dashed"), offset: 2pt, r) }
   else if class == "output" { underline(stroke: 0.6pt, offset: 2pt, emph(r)) }
+  else if class == "phase" { text(weight: "bold", r) }
   else if class == "stage" { marked("stage", r) }
   else if class == "procedure" { marked("procedure", r) }
   else if class == "performer" { marked("performer", r) }

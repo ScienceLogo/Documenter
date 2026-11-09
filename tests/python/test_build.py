@@ -38,12 +38,13 @@ class BuildTest(unittest.TestCase):
         self.assertIn("unknown performer nobody", str(error.exception))
         self.assertFalse(out.exists())
 
-    def test_a_workflow_outside_git_is_refused(self):
+    def test_a_workflow_outside_git_builds(self):
         folder = Path(tempfile.mkdtemp())
+        (folder / "stage.rkt").write_text('#lang sciencelogo\nstage Only about "The only stage."\n')
         entry = folder / "workflow.rkt"
-        entry.write_text("#lang sciencelogo\n")
-        with self.assertRaises(BuildError):
-            build(entry, folder / "out")
+        entry.write_text('#lang sciencelogo\nworkflow "Outside Git"\ninclude "stage.rkt"\n')
+        site = build(entry, folder / "out")
+        self.assertTrue((site / "stages" / "only.html").is_file())
 
 
 if __name__ == "__main__":

@@ -18,15 +18,14 @@ class BuildError(RuntimeError):
     pass
 
 
-def git_root(path: Path) -> Path:
+def settings_root(path: Path) -> Path:
+    """The root of the Git repository that holds `path`, or `path` itself."""
     result = subprocess.run(
         ["git", "-C", str(path), "rev-parse", "--show-toplevel"],
         capture_output=True,
         text=True,
     )
-    if result.returncode != 0:
-        raise BuildError(f"{path} is not in a Git repository; ScienceLogo includes require one")
-    return Path(result.stdout.strip())
+    return Path(result.stdout.strip()) if result.returncode == 0 else path
 
 
 def build(entry: Path, out: Path, config_path: Path | None = None) -> Path:
@@ -38,7 +37,7 @@ def build(entry: Path, out: Path, config_path: Path | None = None) -> Path:
     entry = entry.resolve()
     if not entry.is_file():
         raise BuildError(f"{entry} does not exist")
-    root = git_root(entry.parent)
+    root = settings_root(entry.parent)
     if config_path is None and (root / config.CONFIG_NAME).is_file():
         config_path = root / config.CONFIG_NAME
     settings, warnings = config.load(config_path)

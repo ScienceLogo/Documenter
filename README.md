@@ -20,8 +20,9 @@ pendulum workflow in `examples/pendulum/`.
 
 - Python 3.12 or later, and [uv](https://docs.astral.sh/uv/) to run the
   package with `uvx`.
-- The workflow must sit in a Git repository, as ScienceLogo includes
-  require.
+- A Documenter version works with the ScienceLogo language version named by
+  its first two numbers: version 0.2.x reads workflows written in
+  ScienceLogo 0.2.
 
 Nothing else needs to be installed. On first use the Documenter downloads
 the tested versions of Racket and of the `sciencelogo` package and keeps
@@ -67,8 +68,9 @@ it uses the job's own token, so you don't need to set up a secret.
 Everything can be customised. Any setting you don't change keeps its
 default, and the next section explains how the defaults were chosen.
 
-To change it, add `sciencelogo-documenter.toml` at the root of the workflow
-repository, or pass another file with `--config FILE`. The file can set:
+To change it, add `sciencelogo-documenter.toml` at the root of the workflow's
+Git repository, or next to its entry file if it has none, or pass another file
+with `--config FILE`. The file can set:
 
 - fonts, colours for each category and for the page, in light and dark
   mode;
@@ -102,8 +104,9 @@ and printed documents. The results below set the defaults.
 
 **Website**
 
-- **Pages of medium size:** one page each for the workflow, its stages and
-  its procedures, with each called procedure summarised on the stage page.
+- **Pages of medium size:** one page each for the workflow, its phases, its
+  stages and its procedures, with each called procedure summarised on the
+  stage page.
   Navigating links raises cognitive load (Dillon & Gabbard, 1998;
   DeStefano & LeFevre, 2007), longer nodes did better (Kim &
   Eastman, 1999), and page-by-page reading beat long scrolling (Piolat
@@ -155,8 +158,9 @@ and printed documents. The results below set the defaults.
 
 - **A booklet for paper:** comprehension is better on paper than on screen
   (Clinton, 2019; Kong et al., 2018; Delgado et al., 2018).
-- **Method order:** an overview, then one chapter per stage with the
-  procedures it uses, then shared procedures and record types. A coherent
+- **Method order:** an overview, then one chapter per phase or stage, each
+  stage followed by the procedures it uses, then shared procedures and record
+  types. A coherent
   order helps, as on the website (Salmerón et al., 2005).
 - **Summary first:** each section opens with its `about`, as on the website
   (Lorch, 1989).

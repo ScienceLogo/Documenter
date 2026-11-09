@@ -25,22 +25,37 @@
          (page '(reference) "Reference" "Reference" "reference.html"
                "Record types used in the method." '((overview)))))
 
+  ;; Breadcrumbs lead from the overview through the phases that hold an item.
+  (define (phase-crumbs item)
+    (cons '(overview) (map (lambda (n) (cons 'phase n)) (phase-ancestors doc item))))
+  (define (phase-page ph)
+    (page (cons 'phase (get ph 'name)) (get ph 'name) "Phase"
+          (format "phases/~a.html" (get ph 'slug)) (get ph 'about) (phase-crumbs ph)))
   (define (stage-page s)
     (page (cons 'stage (get s 'name)) (get s 'name) "Stage"
-          (format "stages/~a.html" (get s 'slug)) (get s 'about) '((overview))))
+          (format "stages/~a.html" (get s 'slug)) (get s 'about) (phase-crumbs s)))
   (define (procedure-page p)
     (page (cons 'procedure (get p 'name)) (get p 'name) "Procedure"
           (format "procedures/~a.html" (get p 'slug)) (get p 'about)
-          (if (get p 'stage) (list '(overview) (cons 'stage (get p 'stage))) '((overview) (shared)))))
+          (if (get p 'stage)
+              (let ([s (find-named (get doc 'stages) (get p 'stage))])
+                (append (phase-crumbs s) (list (cons 'stage (get p 'stage)))))
+              '((overview) (shared)))))
 
-  ;; Reading order, depth first: the same order as the booklet.
+  ;; Reading order, depth first through phases and stages: the same order as
+  ;; the booklet.
+  (define (outline-pages node)
+    (define name (get node 'name))
+    (if (equal? (get node 'kind) "phase")
+        (cons (phase-page (find-named (get doc 'phases) name))
+              (append* (map outline-pages (get node 'children))))
+        (let ([s (find-named (get doc 'stages) name)])
+          (cons (stage-page s)
+                (if procedure-pages? (map procedure-page (stage-procedures doc s)) '())))))
   (define sequence
     (append
      (list overview)
-     (append*
-      (for/list ([s (in-list (get doc 'stages))])
-        (cons (stage-page s)
-              (if procedure-pages? (map procedure-page (stage-procedures doc s)) '()))))
+     (append* (map outline-pages (get doc 'outline)))
      (if procedure-pages? (map procedure-page (shared-procedures doc)) '())
      (if reference (list reference) '())))
   (define page-by-key (for/hash ([p (in-list sequence)]) (values (page-key p) p)))
@@ -49,7 +64,7 @@
   (define (target kind name)
     (define (slug-of items) (let ([i (find-named items name)]) (and i (get i 'slug))))
     (case kind
-      [(stage) (let ([p (hash-ref page-by-key (cons 'stage name) #f)]) (and p (page-url p)))]
+      [(stage phase) (let ([p (hash-ref page-by-key (cons kind name) #f)]) (and p (page-url p)))]
       [(procedure)
        (define p (find-named (get doc 'procedures) name))
        (cond
@@ -65,6 +80,7 @@
   (define (preview kind name)
     (case kind
       [(stage) (let ([s (find-named (get doc 'stages) name)]) (and s (get s 'about)))]
+      [(phase) (let ([ph (find-named (get doc 'phases) name)]) (and ph (get ph 'about)))]
       [(procedure)
        (let ([p (find-named (get doc 'procedures) name)])
          (and p (if (get p 'library)
@@ -112,6 +128,7 @@
     (define body
       (case (car (page-key p))
         [(overview) (overview-body doc ctx procedure-pages?)]
+        [(phase) (phase-body doc (find-named (get doc 'phases) (cdr (page-key p))) ctx)]
         [(stage) (stage-body doc (find-named (get doc 'stages) (cdr (page-key p))) ctx procedure-pages?)]
         [(procedure) (procedure-body doc (find-named (get doc 'procedures) (cdr (page-key p))) ctx)]
         [(reference) (reference-body doc ctx)]))
@@ -140,7 +157,7 @@
 (define (section-start ctx) (hash-clear! (context-seen ctx)))
 
 (define category-class
-  (hasheq 'stage "cat-stage" 'procedure "cat-procedure" 'performer "cat-performer" 'record "cat-record"))
+  (hasheq 'phase "cat-phase" 'stage "cat-stage" 'procedure "cat-procedure" 'performer "cat-performer" 'record "cat-record"))
 
 ;; item : context symbol string -> string
 ;; Names an item in its category style. The first mention in each section is a
@@ -265,7 +282,7 @@
    "\n"))
 
 (define code-classes
-  (hasheq 'stage "cat-stage" 'procedure "cat-procedure" 'performer "cat-performer"
+  (hasheq 'phase "cat-phase" 'stage "cat-stage" 'procedure "cat-procedure" 'performer "cat-performer"
           'keyword "code-keyword" 'input "code-input" 'output "code-output"))
 
 (define (call-html ctx c)
@@ -284,20 +301,26 @@
 
 (define (overview-body doc ctx procedure-pages?)
   (section-start ctx)
-  (define outline
-    (tag 'ol '((class . "method-outline"))
+  (define (outline-list nodes)
+    (tag 'ul '()
          (apply string-append
-                (for/list ([s (in-list (get doc 'stages))])
-                  (tag 'li '()
-                       (item ctx 'stage (get s 'name))
-                       (if (get s 'performer) (string-append ", by " (item ctx 'performer (get s 'performer))) "")
-                       (let ([ps (stage-procedures doc s)])
-                         (if (null? ps)
-                             ""
-                             (tag 'ul '()
-                                  (apply string-append
-                                         (for/list ([p (in-list ps)])
-                                           (tag 'li '() (item ctx 'procedure (get p 'name)))))))))))))
+                (for/list ([node (in-list nodes)])
+                  (define name (get node 'name))
+                  (if (equal? (get node 'kind) "phase")
+                      (tag 'li '() (item ctx 'phase name) (outline-list (get node 'children)))
+                      (let ([s (find-named (get doc 'stages) name)])
+                        (tag 'li '()
+                             (item ctx 'stage name)
+                             (if (get s 'performer) (string-append ", by " (item ctx 'performer (get s 'performer))) "")
+                             (let ([ps (stage-procedures doc s)])
+                               (if (null? ps)
+                                   ""
+                                   (tag 'ul '()
+                                        (apply string-append
+                                               (for/list ([p (in-list ps)])
+                                                 (tag 'li '() (item ctx 'procedure (get p 'name)))))))))))))))
+  (define outline
+    (tag 'div '((class . "method-outline")) (outline-list (get doc 'outline))))
   (section-start ctx)
   (define performers
     (if (null? (get doc 'performers))
@@ -363,6 +386,7 @@
                          (for/list ([l (in-list (get doc 'libraries))])
                            (tag 'li '() (esc (get l 'name))
                                 (if (string=? (get l 'version) "") "" (string-append ", version " (esc (get l 'version))))
+                                (if (get l 'language) (string-append ", for ScienceLogo " (esc (get l 'language))) "")
                                 (if (get l 'url)
                                     (string-append ": " (tag 'a (list (cons 'href (get l 'url))) "documentation"))
                                     ""))))))))
@@ -388,6 +412,22 @@
        (facts (list (cons "Inputs" (if (null? (get p 'inputs)) #f
                                        (string-join (map (lambda (i) (tag 'code '() (esc i))) (get p 'inputs)) ", ")))))
        (verbose-block ctx doc (get p 'verbose))))
+
+(define (phase-body doc ph ctx)
+  (section-start ctx)
+  (string-append
+   (about-block (get ph 'about))
+   (facts
+    (list
+     (cons "Contains"
+           (tag 'ul '()
+                (apply string-append
+                       (for/list ([m (in-list (get ph 'members))])
+                         (define kind (string->symbol (get m 'kind)))
+                         (define about ((context-preview ctx) kind (get m 'name)))
+                         (tag 'li '() (item ctx kind (get m 'name))
+                              (if about (string-append ": " (esc (about->plain about))) ""))))))))
+   (verbose-block ctx doc (get ph 'verbose))))
 
 (define (stage-body doc s ctx procedure-pages?)
   (section-start ctx)
@@ -490,26 +530,31 @@
   (define (href q) (string-append root (page-url q)))
   (define (outline-link q)
     (define current? (equal? (page-key q) (page-key p)))
-    (define class (case (car (page-key q)) [(stage) "cat-stage"] [(procedure) "cat-procedure"] [else #f]))
+    (define class (case (car (page-key q))
+                    [(phase) "cat-phase"] [(stage) "cat-stage"] [(procedure) "cat-procedure"] [else #f]))
     (tag 'a (list (cons 'href (href q)) (cons 'class class) (cons 'aria-current (and current? "page")))
          (if (eq? (car (page-key q)) 'procedure) (tag 'code '() (esc (page-title q))) (esc (page-title q)))))
+  (define (outline-node node)
+    (define name (get node 'name))
+    (if (equal? (get node 'kind) "phase")
+        (tag 'li '()
+             (outline-link (hash-ref page-by-key (cons 'phase name)))
+             (tag 'ul '() (apply string-append (map outline-node (get node 'children)))))
+        (let ([ps (if procedure-pages? (stage-procedures doc (find-named (get doc 'stages) name)) '())])
+          (tag 'li '()
+               (outline-link (hash-ref page-by-key (cons 'stage name)))
+               (if (null? ps) ""
+                   (tag 'ul '()
+                        (apply string-append
+                               (for/list ([pr (in-list ps)])
+                                 (tag 'li '() (outline-link (hash-ref page-by-key (cons 'procedure (get pr 'name)))))))))))))
   (define outline
     (tag 'nav '((class . "outline") (aria-label . "Method outline"))
          (tag 'ul '()
               (tag 'li '()
                    (outline-link (hash-ref page-by-key '(overview)))
                    (tag 'ul '()
-                        (apply string-append
-                               (for/list ([s (in-list (get doc 'stages))])
-                                 (define sp (hash-ref page-by-key (cons 'stage (get s 'name))))
-                                 (define ps (if procedure-pages? (stage-procedures doc s) '()))
-                                 (tag 'li '()
-                                      (outline-link sp)
-                                      (if (null? ps) ""
-                                          (tag 'ul '()
-                                               (apply string-append
-                                                      (for/list ([pr (in-list ps)])
-                                                        (tag 'li '() (outline-link (hash-ref page-by-key (cons 'procedure (get pr 'name))))))))))))
+                        (apply string-append (map outline-node (get doc 'outline)))
                         (let ([shared (if procedure-pages? (shared-procedures doc) '())])
                           (if (null? shared) ""
                               (tag 'li '() (tag 'span '() "Shared procedures")
@@ -553,6 +598,7 @@
              "")))
   (define heading
     (case (car (page-key p))
+      [(phase) (tag 'span '((class . "cat-phase")) (esc (page-title p)))]
       [(stage) (tag 'span '((class . "cat-stage")) (esc (page-title p)))]
       [(procedure) (tag 'code '((class . "cat-procedure")) (esc (page-title p)))]
       [else (esc (page-title p))]))
@@ -629,6 +675,7 @@
        (define key (page-key p))
        (define text
          (case (car key)
+           [(phase) (get (find-named (get doc 'phases) (cdr key)) 'verbose)]
            [(stage) (get (find-named (get doc 'stages) (cdr key)) 'verbose)]
            [(procedure) (get (find-named (get doc 'procedures) (cdr key)) 'verbose)]
            [else ""]))

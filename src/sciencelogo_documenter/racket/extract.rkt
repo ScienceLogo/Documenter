@@ -17,7 +17,7 @@
 ;; Top-level forms that start a new item. Other forms are commands, which
 ;; belong to the simple stage before them.
 (define declaration-kinds
-  '(about performer resource interface proposition must-stage-order must-call
+  '(about performer resource interface proposition phase must-stage-order must-call
     included-file include import implements implement to stage state-stage library))
 
 ;; slugify : string -> string
@@ -66,16 +66,22 @@
     (when (and (token? at) (memq (node-kind form) declaration-kinds))
       (hash-update! boundaries (format "~a" (token-source at))
                     (lambda (l) (cons (token-position at) l)) '())))
-  (define (verbose-at ref)
+  ;; The verbose text of an item. The model gives the end of stages, phases
+  ;; and procedures; other items end where the next item starts.
+  (define (verbose-at ref [end-ref #f])
     (cond
       [(not ref) ""]
       [else
        (define file (source-ref-source ref))
        (define start (source-ref-position ref))
        (define later (filter (lambda (p) (> p start)) (hash-ref boundaries file '())))
+       (define end
+         (if (and end-ref (equal? (source-ref-source end-ref) file))
+             (source-ref-position end-ref)
+             (and (pair? later) (apply min later))))
        ;; Items read from an imported library have no local file.
        (if (file-exists? file)
-           (cut file start (and (pair? later) (apply min later)))
+           (cut file start end)
            "")]))
 
   ;; Imported libraries, with the documentation markers of their entry files.
@@ -92,6 +98,7 @@
       (hasheq 'alias (format "~a" (import-model-alias i))
               'name name
               'version (format "~a" (or (import-model-requested-revision i) ""))
+              'language (let ([l (import-model-language i)]) (if l (format "~a" l) 'null))
               'url (hash-ref markers "url" #f))))
   (define (library-of name)
     (for/first ([l (in-list library-info)]
@@ -152,6 +159,54 @@
          (= (length callers) 1)
          (cdr (car stage-callers))))
 
+  ;; Phases group stages and smaller phases. Their members are named by id.
+  (define phases (workflow-model-phases model))
+  (define phase-by-id (for/hash ([p (in-list phases)]) (values (phase-model-id p) p)))
+  (define phase-by-name (for/hash ([p (in-list phases)]) (values (format "~a" (phase-model-name p)) p)))
+  (define (member-of id)
+    (cond
+      [(hash-ref stage-by-id id #f) => (lambda (s) (cons 'stage (stage-model-name s)))]
+      [(hash-ref phase-by-id id #f) => (lambda (p) (cons 'phase (format "~a" (phase-model-name p))))]
+      [(hash-ref phase-by-name (format "~a" id) #f) => (lambda (p) (cons 'phase (format "~a" (phase-model-name p))))]
+      [(findf (lambda (s) (equal? (stage-model-name s) (format "~a" id))) stages)
+       => (lambda (s) (cons 'stage (stage-model-name s)))]
+      [else #f]))
+  (define phase-members
+    (for/hash ([p (in-list phases)])
+      (values (format "~a" (phase-model-name p)) (filter values (map member-of (phase-model-members p))))))
+  (define phase-of
+    (for*/hash ([(phase members) (in-hash phase-members)] [m (in-list members)])
+      (values m phase)))
+  (define phase-slugs (unique-slugs (map (lambda (p) (format "~a" (phase-model-name p))) phases)))
+  (define phase-records
+    (for/list ([p (in-list phases)] [slug (in-list phase-slugs)])
+      (define name (format "~a" (phase-model-name p)))
+      (hasheq 'name name
+              'slug slug
+              'about (or (description-text (phase-model-description p)) 'null)
+              'members (for/list ([m (in-list (hash-ref phase-members name))])
+                         (hasheq 'kind (symbol->string (car m)) 'name (cdr m)))
+              'phase (or (hash-ref phase-of (cons 'phase name) #f) 'null)
+              'verbose (verbose-at (phase-model-source p) (phase-model-end p)))))
+  ;; The method as an outline: top-level phases and stages, in stage order.
+  (define (outline-node m)
+    (if (eq? (car m) 'stage)
+        (hasheq 'kind "stage" 'name (cdr m) 'children '())
+        (hasheq 'kind "phase" 'name (cdr m)
+                'children (map outline-node (hash-ref phase-members (cdr m))))))
+  (define (top-of m)
+    (define parent (hash-ref phase-of m #f))
+    (if parent (top-of (cons 'phase parent)) m))
+  (define method-outline
+    (let loop ([ss stages] [seen '()] [acc '()])
+      (cond
+        [(null? ss) (reverse acc)]
+        [else
+         (define top (top-of (cons 'stage (stage-model-name (car ss)))))
+         (if (member top seen)
+             (loop (cdr ss) seen acc)
+             (loop (cdr ss) (cons top seen) (cons (outline-node top) acc)))])))
+
   (define stage-records
     (for/list ([s (in-list stages)])
       (define name (stage-model-name s))
@@ -170,7 +225,8 @@
               'procedures (for/list ([p (in-list procedures)]
                                      #:when (equal? (stage-owner (format "~a" (procedure-model-name p))) name))
                             (format "~a" (procedure-model-name p)))
-              'verbose (verbose-at (stage-model-source s)))))
+              'phase (or (hash-ref phase-of (cons 'stage name) #f) 'null)
+              'verbose (verbose-at (stage-model-source s) (stage-model-end s)))))
 
   (define procedure-records
     (for/list ([p (in-list procedures)])
@@ -187,7 +243,7 @@
                            (hasheq 'kind (symbol->string (car c)) 'name (cdr c)))
               'calls (hash-ref calls-from name '())
               'stage (or (stage-owner name) 'null)
-              'verbose (verbose-at (procedure-model-source p)))))
+              'verbose (verbose-at (procedure-model-source p) (procedure-model-end p)))))
 
   ;; Performers, propositions, requirements, record types and libraries.
   (define performer-records
@@ -238,10 +294,13 @@
     (for/list ([l (in-list library-info)] #:when (hash-ref l 'url))
       (hasheq 'name (hash-ref l 'name)
               'version (hash-ref l 'version)
+              'language (hash-ref l 'language)
               'url (hash-ref l 'url))))
 
   (hasheq 'title (or (workflow-model-title model) 'null)
           'about (or (description-text (workflow-model-description model)) 'null)
+          'outline method-outline
+          'phases phase-records
           'stages stage-records
           'procedures procedure-records
           'performers performer-records

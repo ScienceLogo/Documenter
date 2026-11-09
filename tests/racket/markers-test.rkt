@@ -51,7 +51,7 @@
   (git "-C" (path->string dir) "config" "user.email" "test@example.org")
   (display-to-file
    (string-append "#lang sciencelogo\n" marker
-                  "library tools [\n  to double :x [\n    about \"Double a number.\"\n    output :x * 2\n  ]\n]\n")
+                  "library tools language \"0.2\" [\n  to double :x about \"Double a number.\" [\n    output :x * 2\n  ]\n]\n")
    (build-path dir "library.rkt"))
   (git "-C" (path->string dir) "add" "library.rkt")
   (git "-C" (path->string dir) "commit" "-q" "-m" "library")
@@ -84,7 +84,7 @@
   (with-library "; @doc url: https://example.org/tools/\n"
     (lambda (doc)
       (check-equal? (get doc 'libraries)
-                    (list (hasheq 'name "tools" 'version "v1" 'url "https://example.org/tools/")))
+                    (list (hasheq 'name "tools" 'version "v1" 'language "0.2" 'url "https://example.org/tools/")))
       (define double (find-named (get doc 'procedures) "tools.double"))
       (check-equal? (get double 'library_url) "https://example.org/tools/")
       (check-equal? (get double 'about) "Double a number.")

@@ -16,7 +16,8 @@
 (define (page p) (file->string (build-path site p)))
 
 (test-case "one page per stage and per procedure, an overview and a reference"
-  (for ([p '("index.html" "reference.html" "stages/prepare.html" "stages/observe.html"
+  (for ([p '("index.html" "reference.html" "phases/measurement.html" "phases/analysis.html"
+             "stages/prepare.html" "stages/observe.html"
              "stages/compare.html" "stages/revise.html"
              "procedures/calculate-period.html" "procedures/compare-periods.html"
              "assets/site.css" "assets/site.js" "assets/search-index.js" "assets/favicon.svg")])
@@ -27,6 +28,11 @@
   (define (at s) (car (car (regexp-match-positions (regexp-quote s) html))))
   (check-true (< (at "<h1>") (at "class=\"breadcrumbs\"") (at "class=\"about\"")
                  (at "class=\"facts\"") (at "Method text"))))
+
+(test-case "breadcrumbs and the reading order go through the phases"
+  (define html (page "procedures/calculate-period.html"))
+  (check-true (string-contains? html "<li><a href=\"../phases/measurement.html\">Measurement</a></li><li><a href=\"../stages/observe.html\">Observe</a></li>"))
+  (check-true (string-contains? (page "phases/measurement.html") "href=\"../stages/prepare.html\" rel=\"next\"")))
 
 (test-case "navigation: outline with the current page, and the reading order"
   (define html (page "stages/compare.html"))

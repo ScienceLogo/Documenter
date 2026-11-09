@@ -14,13 +14,14 @@ RACKET_TARBALLS = {
 }
 
 # The `sciencelogo` Racket package, from a fixed release of the language,
-# with the package checksum published for that release.
-SCIENCELOGO_RELEASE = "v0.1"
+# with the package checksum published for that release. The first two numbers
+# of the Documenter's own version name this language version.
+SCIENCELOGO_RELEASE = "v0.2"
 SCIENCELOGO_URL = (
     "https://github.com/ScienceLogo/Language/releases/download/"
     f"{SCIENCELOGO_RELEASE}/sciencelogo.zip"
 )
-SCIENCELOGO_CHECKSUM = "04adaefe40a00014c21e600431f7adaef35bf707"
+SCIENCELOGO_CHECKSUM = "6376e1556db72cac720792545b2302a5a6f5a8c2"
 
 
 def racket_tarball(platform: str) -> tuple[str, str]:

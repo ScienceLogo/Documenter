@@ -42,7 +42,7 @@ DEFAULTS: dict = {
             "dark": {"stage": "#56B4E9", "performer": "#E69F00", "procedure": "#009E73", "uncertainty": "#D55E00"},
         },
     },
-    "index": {"kinds": ["Stages", "Procedures", "Performers", "Record types", "Requirements"]},
+    "index": {"kinds": ["Phases", "Stages", "Procedures", "Performers", "Record types", "Requirements"]},
     "versions": {
         "racket_url": None,
         "racket_sha256": None,

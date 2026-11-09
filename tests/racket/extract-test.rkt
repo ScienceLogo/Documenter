@@ -21,6 +21,16 @@
   (check-equal? (map (lambda (s) (get s 'performer)) (get doc 'stages))
                 '("assistant" "assistant" "researcher" #f)))
 
+(test-case "phases group the stages, and the outline follows them"
+  (check-equal? (names (get doc 'phases)) '("Measurement" "Analysis"))
+  (check-equal? (map (lambda (m) (get m 'name)) (get (car (get doc 'phases)) 'members)) '("Prepare" "Observe"))
+  (check-equal? (map (lambda (s) (get s 'phase)) (get doc 'stages))
+                '("Measurement" "Measurement" "Analysis" "Analysis"))
+  (check-equal? (for/list ([n (in-list (get doc 'outline))])
+                  (cons (get n 'name) (map (lambda (c) (get c 'name)) (get n 'children))))
+                '(("Measurement" "Prepare" "Observe") ("Analysis" "Compare" "Revise")))
+  (check-true (string-prefix? (get (car (get doc 'phases)) 'verbose) "phase Measurement")))
+
 (test-case "procedures, their inputs and who calls them"
   (define calc (find-named (get doc 'procedures) "calculate-period"))
   (check-equal? (get calc 'inputs) '("elapsed" "swings"))

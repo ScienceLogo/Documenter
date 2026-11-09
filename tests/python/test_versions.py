@@ -15,6 +15,12 @@ class VersionsTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             racket_tarball("no-such-platform")
 
+    def test_the_version_names_the_language_version(self):
+        from sciencelogo_documenter import __version__
+
+        language = versions.SCIENCELOGO_RELEASE.removeprefix("v")
+        self.assertEqual(".".join(__version__.split(".")[:2]), language)
+
     def test_sciencelogo_is_pinned_to_a_release(self):
         self.assertIn(f"/releases/download/{versions.SCIENCELOGO_RELEASE}/", versions.SCIENCELOGO_URL)
         self.assertEqual(len(versions.SCIENCELOGO_CHECKSUM), 40)

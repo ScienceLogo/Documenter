@@ -7,6 +7,7 @@
 
 (provide get
          code-names
+         phase-ancestors
          stage-procedures
          shared-procedures
          find-named)
@@ -21,9 +22,18 @@
 ;; The names that the method text marks with their category.
 (define (code-names doc)
   (make-immutable-hash
-   (append (map (lambda (s) (cons (get s 'name) 'stage)) (get doc 'stages))
+   (append (map (lambda (ph) (cons (get ph 'name) 'phase)) (get doc 'phases))
+           (map (lambda (s) (cons (get s 'name) 'stage)) (get doc 'stages))
            (map (lambda (p) (cons (get p 'name) 'procedure)) (get doc 'procedures))
            (map (lambda (p) (cons (get p 'name) 'performer)) (get doc 'performers)))))
+
+;; phase-ancestors : doc item -> (listof string)
+;; The phases that hold a stage or phase, from the outermost to the nearest.
+(define (phase-ancestors doc item)
+  (let loop ([phase (get item 'phase)] [acc '()])
+    (if phase
+        (loop (get (find-named (get doc 'phases) phase) 'phase) (cons phase acc))
+        acc)))
 
 (define (find-named items name)
   (findf (lambda (i) (equal? (get i 'name) name)) items))

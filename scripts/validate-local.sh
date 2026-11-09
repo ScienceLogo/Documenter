@@ -11,6 +11,9 @@ if [ -z "${SCIENCELOGO_DOCUMENTER_RACKET:-}" ]; then
   SCIENCELOGO_DOCUMENTER_RACKET="$("$PYTHON" -m sciencelogo_documenter bootstrap)"
 fi
 export SCIENCELOGO_DOCUMENTER_RACKET
+if ! "$SCIENCELOGO_DOCUMENTER_RACKET/racket" -l racket/base -l rackunit -e "" 2>/dev/null; then
+  "$SCIENCELOGO_DOCUMENTER_RACKET/raco" pkg install --auto --batch --no-docs --scope installation rackunit-lib
+fi
 
 "$PYTHON" -m compileall -q src tests
 "$PYTHON" -m unittest discover -s tests/python -v

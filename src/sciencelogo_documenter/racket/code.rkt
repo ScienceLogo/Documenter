@@ -9,7 +9,7 @@
 
 ;; Words that open, close or connect the parts of a method.
 (define structure-words
-  '("start" "end" "stage" "from" "state" "do" "with" "into" "output" "about" "by"
+  '("start" "end" "stage" "phase" "contains" "from" "state" "do" "with" "into" "output" "about" "by"
     "workflow" "performer" "resource" "interface" "hypothesis" "assumption" "conclusion"
     "must" "import" "include" "library" "repeat" "while" "for" "each" "if" "else" "until"))
 

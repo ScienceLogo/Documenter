@@ -1,7 +1,7 @@
 cff-version: 1.2.0
-message: v0.0.2 - Adds the ScienceLogo favicon and a link to the language on the website and in the booklet.
+message: v0.2.0 - Works with ScienceLogo 0.2, and documents phases.
 title: ScienceLogo Documenter
-version: 0.0.2
+version: 0.2.0
 type: software
 doi: 10.5281/zenodo.23990463
 authors:

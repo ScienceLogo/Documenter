@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.2.0] - 2026-11-09
+
+Works with ScienceLogo 0.2. From this release, the first two numbers of the version name the language version that the Documenter reads.
+
+### Added
+
+- Phases: a page for each phase on the website, with phases in the outline, breadcrumbs and reading order; a chapter for each top-level phase in the booklet, and a Phases heading in its index
+- The language version that each library states, shown with the library
+
+### Changed
+
+- Reads workflows written in ScienceLogo 0.2, installed at that pinned release
+- The method text of each stage, phase and procedure ends where the reference reader says it ends
+- A workflow no longer needs to sit in a Git repository; only publishing to a branch uses Git
+- The example workflow uses the 0.2 syntax and groups its stages into two phases
+
 ## [0.0.2] - 2026-11-06
 
 ### Added

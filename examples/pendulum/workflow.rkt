@@ -22,3 +22,11 @@ include "stages/prepare.rkt"
 include "stages/observe.rkt"
 include "stages/compare.rkt"
 include "stages/revise.rkt"
+
+phase Measurement
+  about "Set up the pendulum and time its swings at two amplitudes."
+[Prepare Observe]
+
+phase Analysis
+  about "Compare the two periods and revise the starting hypothesis."
+[Compare Revise]

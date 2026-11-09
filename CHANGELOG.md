@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1] - 2026-11-09
+
+### Added
+
+- Diagrams: a UML activity diagram on each overview, phase, stage and procedure page that has steps, and in the matching booklet section, in the page's fonts and palette; the `layout.diagrams` setting turns them off
+- The design defaults for diagrams, with their evidence, in the README
+
 ## [0.2.0] - 2026-11-09
 
 Works with ScienceLogo 0.2. From this release, the first two numbers of the version name the language version that the Documenter reads.

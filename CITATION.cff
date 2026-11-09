@@ -1,7 +1,7 @@
 cff-version: 1.2.0
-message: "v0.2.0 - Works with ScienceLogo 0.2, and documents phases."
+message: "v0.2.1 - Adds UML activity diagrams to the website and the booklet."
 title: ScienceLogo Documenter
-version: 0.2.0
+version: 0.2.1
 type: software
 doi: 10.5281/zenodo.23990463
 authors:

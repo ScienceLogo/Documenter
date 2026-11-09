@@ -76,7 +76,8 @@ with `--config FILE`. The file can set:
   mode;
 - logos for the website header and the booklet title page, and the website's
   favicon;
-- layout parameters, such as page depth and paper size (A4 or A5);
+- layout parameters, such as page depth, paper size and whether to draw
+  diagrams;
 - index entries;
 - the Racket and `sciencelogo` versions, if you want to try versions other
   than the tested ones, at your own risk.

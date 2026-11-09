@@ -13,7 +13,7 @@ CONFIG_NAME = "sciencelogo-documenter.toml"
 DEFAULTS: dict = {
     "title": None,
     "site": {"logo": None, "favicon": None},
-    "layout": {"page_depth": 3},
+    "layout": {"page_depth": 3, "diagrams": True},
     "booklet": {"paper": "a4", "body_size": "10.5pt", "logo": None},
     "fonts": {
         "text": "Atkinson Hyperlegible Next",

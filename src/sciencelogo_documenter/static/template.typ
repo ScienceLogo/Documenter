@@ -115,6 +115,18 @@
 
 #let anchor(target) = [#metadata("anchor") #label(target)]
 
+// A page's diagram, at its natural size or narrowed to the text width.
+#let diagram(file, caption) = {
+  figure(
+    layout(size => {
+      let img = image(file)
+      let natural = measure(img)
+      if natural.width > size.width { image(file, width: 100%) } else { img }
+    }),
+    caption: caption,
+  )
+}
+
 #let about-text(paragraphs) = {
   if paragraphs.len() == 0 {
     par(emph[No summary was given for this item.])

@@ -228,6 +228,14 @@
               'phase (or (hash-ref phase-of (cons 'stage name) #f) 'null)
               'verbose (verbose-at (stage-model-source s) (stage-model-end s)))))
 
+  ;; What each procedure outputs, written as an expression.
+  (define outputs
+    (for/hash ([a (in-list (workflow-model-activities model))]
+               #:when (eq? (activity-model-kind a) 'output))
+      (values (activity-model-parent a)
+              (match (activity-model-details a)
+                [`(output ,e) (expression->text e)]
+                [_ "output"]))))
   (define procedure-records
     (for/list ([p (in-list procedures)])
       (define name (format "~a" (procedure-model-name p)))
@@ -239,6 +247,7 @@
               'slug (hash-ref procedure-slug name)
               'about (or (description-text (procedure-model-description p)) 'null)
               'inputs (map input-name (procedure-model-inputs p))
+              'output (hash-ref outputs (procedure-model-id p) 'null)
               'called_by (for/list ([c (in-list (hash-ref called-by name '()))])
                            (hasheq 'kind (symbol->string (car c)) 'name (cdr c)))
               'calls (hash-ref calls-from name '())
@@ -314,6 +323,24 @@
   (if (equal? (hash-ref v 'kind) "text") (hash-ref v 'text) (display->plain v)))
 
 (define node-children* node-children)
+
+;; expression->text : term -> string
+;; A short, compact rendering of an expression from the workflow model.
+(define (expression->text e)
+  (match e
+    [`(binary ,op (,a ,b)) (format "~a ~a ~a" (operand a) op (operand b))]
+    [`(unary ,op ,a) (format "~a~a" op (operand a))]
+    [`(parameter ,name) (format ":~a" name)]
+    [`(literal ,v) (if (real? v) (number->display v) (format "~s" v))]
+    [`(field-ref ,f ,base) (format "~a.~a" (expression->text base) f)]
+    [`(result ,name) (format "~a" name)]
+    [`(group ,inner) (format "(~a)" (expression->text inner))]
+    [_ "…"]))
+
+(define (operand e)
+  (match e
+    [`(binary ,_ ,_) (format "(~a)" (expression->text e))]
+    [_ (expression->text e)]))
 
 ;; interface->record : datum string -> jsexpr
 (define (interface->record datum verbose)

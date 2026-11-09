@@ -45,6 +45,34 @@
   (check-true (file-exists? (build-path site "assets" "sciencelogo.png")))
   (check-false (string-contains? (page "stages/observe.html") "language-note")))
 
+(test-case "a page shows its diagram after its summary"
+  (define html (page "stages/observe.html"))
+  (define (at s) (car (car (regexp-match-positions (regexp-quote s) html))))
+  (check-true (< (at "class=\"about\"") (at "<figure class=\"diagram-figure\">") (at "class=\"facts\"")))
+  (check-true (string-contains? html "<figcaption>Diagram of the stage Observe</figcaption>"))
+  ;; The calls link to their procedures, and the frame shows what the stage reads and writes.
+  (check-true (string-contains? html "<a href=\"../procedures/calculate-period.html\">"))
+  (check-true (string-contains? html ">large-swing.elapsed</text>"))
+  (check-true (string-contains? html ">large-swing.period</text>"))
+  ;; A stage without steps has no diagram.
+  (check-false (string-contains? (page "stages/revise.html") "<svg")))
+
+(test-case "diagrams can be turned off"
+  (define site2 (make-temporary-file "site-~a" 'directory))
+  (render-site doc (hasheq 'layout (hasheq 'page_depth 3 'diagrams #f)) site2
+               (build-path package "static") (build-path package "fonts"))
+  (check-false (string-contains? (file->string (build-path site2 "stages" "observe.html")) "<svg"))
+  (delete-directory/files site2))
+
+(test-case "the booklet places the same diagrams, as files next to its source"
+  (define work (make-temporary-file "work-~a" 'directory))
+  (define typ (with-output-to-string (lambda () (write-booklet doc settings (current-output-port) work))))
+  (check-true (string-contains? typ "#diagram(\"diagram-stage-observe.svg\", \"Diagram of the stage Observe\")"))
+  (check-true (file-exists? (build-path work "diagram-stage-observe.svg")))
+  (check-true (string-contains? (file->string (build-path work "diagram-stage-observe.svg"))
+                                "font-family=\"Atkinson Hyperlegible Next\""))
+  (delete-directory/files work))
+
 (test-case "pages use the ScienceLogo favicon"
   (check-true (string-contains? (page "stages/observe.html")
                                 "<link rel=\"icon\" href=\"../assets/favicon.svg\" type=\"image/svg+xml\">")))

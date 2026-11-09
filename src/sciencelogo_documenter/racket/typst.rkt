@@ -3,7 +3,7 @@
 ;; page numbers of the table of contents, the page references and the index.
 
 (require racket/list racket/string
-         "code.rkt" "markup.rkt" "structure.rkt" "values.rkt")
+         "code.rkt" "diagram.rkt" "markup.rkt" "structure.rkt" "values.rkt")
 
 (provide write-booklet)
 
@@ -36,7 +36,7 @@
       "()"))
 
 ;; write-booklet : doc settings output-port -> void
-(define (write-booklet doc settings out)
+(define (write-booklet doc settings out [work-dir #f])
   (define booklet (or (get settings 'booklet) (hasheq)))
   (define fonts (or (get settings 'fonts) (hasheq)))
   (define colours (or (get settings 'colours) (hasheq)))
@@ -115,6 +115,14 @@
      "]"))
 
   (define names (code-names doc))
+  ;; Diagrams are written next to booklet.typ, and placed after each summary.
+  (define diagrams? (and work-dir (hash-ref (or (get settings 'layout) (hasheq)) 'diagrams #t)))
+  (define (emit-diagram kind item file)
+    (define d (and diagrams? (page-diagram doc kind item)))
+    (when d
+      (call-with-output-file (build-path work-dir file) #:exists 'replace
+        (lambda (o) (write-string (diagram-svg d 'print (lambda _ #f) "" settings) o)))
+      (emit (format "#diagram(~a, ~a)" (ts file) (ts (diagram-caption d))))))
   (define (method-code text)
     (format "#method-code(~a)"
             (tarray (for/list ([line (in-list (code-lines text names))])
@@ -131,6 +139,7 @@
     (emit (format "#heading(level: ~a)[#~a] <~a>" level (ts (get p 'name)) (hash-ref labels (cons 'procedure (get p 'name)))))
     (emit (format "#idx(\"Procedures\", ~a, def: true)" (ts (get p 'name))))
     (emit (format "#about-text(~a)" (paragraphs (get p 'about))))
+    (emit-diagram 'procedure p (format "diagram-procedure-~a.svg" (get p 'slug)))
     (emit (facts
            (list
             (cons "Inputs" (and (pair? (get p 'inputs)) (join-content (map code (get p 'inputs)) ", ")))
@@ -161,6 +170,7 @@
   (emit "#pagebreak(weak: true)")
   (emit "#heading(level: 1)[Overview] <overview>")
   (emit (format "#about-text(~a)" (paragraphs (get doc 'about))))
+  (emit-diagram 'overview doc "diagram-overview.svg")
   (emit "#heading(level: 2)[Method]")
   (let outline ([nodes (get doc 'outline)] [indent ""])
     (for ([node (in-list nodes)])
@@ -225,6 +235,7 @@
                   (hash-ref labels (cons 'phase (get ph 'name)))))
     (emit (format "#idx(\"Phases\", ~a, def: true)" (ts (get ph 'name))))
     (emit (format "#about-text(~a)" (paragraphs (get ph 'about))))
+    (emit-diagram 'phase ph (format "diagram-phase-~a.svg" (get ph 'slug)))
     (emit (facts (list (cons "Contains"
                              (join-content (for/list ([m (in-list (get ph 'members))])
                                              (ref (string->symbol (get m 'kind)) (get m 'name)))
@@ -243,6 +254,7 @@
     (emit (format "#heading(level: ~a)[#stage-name(~a)] <~a>" level (ts (get s 'name)) (hash-ref labels (cons 'stage (get s 'name)))))
     (emit (format "#idx(\"Stages\", ~a, def: true)" (ts (get s 'name))))
     (emit (format "#about-text(~a)" (paragraphs (get s 'about))))
+    (emit-diagram 'stage s (format "diagram-stage-~a.svg" (get s 'slug)))
     (emit (facts
            (list
             (cons "Performer" (and (get s 'performer) (string-append "[#" (ref 'performer (get s 'performer)) "]")))

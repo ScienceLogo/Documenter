@@ -181,6 +181,45 @@ and printed documents. The results below set the defaults.
 - **Paper:** A4 by default, as the international standard (ISO 216); any
   other size, such as US Letter or A5, can be set.
 
+**Diagrams, on the website and in the booklet**
+
+- **UML activity diagrams, as the standard notation:** each diagram uses a
+  subset of the UML activity diagram (Object Management Group, 2017; ISO/IEC
+  19505-2:2012): the activity frame, with input and output boxes on its
+  border; call actions, marked with a rake, for phases, stages and
+  procedures; arrows labelled with the values that flow; start and end
+  nodes; performers named in brackets above a step; and notes for units and
+  uncertainty. UML fixes the symbols and their meaning but leaves fonts,
+  colours and layout free, so the conventions below stay within the
+  standard.
+- **A small diagram on each page, at the page's level:** phases and stages
+  on the overview, the stages of a phase, the steps of a stage, the inputs
+  and output of a procedure. Simple diagrams that highlight structure support
+  learning (Larkin & Simon, 1987; Butcher, 2006), while large overview maps
+  did not reliably help (DeStefano & LeFevre, 2007; Potelle & Rouet, 2003),
+  and large process models are better split (Mendling, Reijers & van der
+  Aalst, 2010).
+- **Answers to UML's known weaknesses:** many UML symbols look alike, and its
+  diagrams quickly become cluttered (Moody & van Hillegersberg, 2009). Here
+  the category colours and type styles set stages, procedures and performers
+  apart on top of the standard shapes; each diagram keeps to one level and a
+  few elements; and the flow always runs left to right, with inputs on the
+  frame's left border and outputs on its right.
+- **Next to the text, with labels inside:** words placed close to the graphic
+  they describe give large learning gains (Ginns, 2006), so names sit in the
+  boxes and on the arrows, with no legend.
+- **Few shapes, each with one meaning, and no crossing lines:** clearly
+  distinct symbols improve comprehension (Moody, 2009; Figl, Mendling &
+  Strembeck, 2013), and edge crossings hurt it most (Purchase, 1997).
+  Left-to-right is the flow direction that theory favours (Figl & Strembeck,
+  2015).
+- **The standard fonts and colours:** the same fonts as the text, and the
+  category colours as thin markers on shapes that already differ, so the
+  diagram also prints in greyscale. Colour works best as a second cue (Moody,
+  2009; Kummer, Recker & Mendling, 2016).
+- **A text alternative:** the page's facts state the same content, and the
+  diagram carries a short description (WCAG 2.2).
+
 ### References
 
 - Abdullah, N., & Gibb, F. (2008). Using a task-based approach in evaluating
@@ -201,6 +240,9 @@ and printed documents. The results below set the defaults.
 - BIPM (2019). *The International System of Units (SI)*, 9th edition.
 - Birch, J. (2012). Worldwide prevalence of red-green color deficiency.
   *JOSA A*, 29(3), 313–320. https://doi.org/10.1364/JOSAA.29.000313
+- Butcher, K. R. (2006). Learning from text with diagrams: Promoting mental
+  model development and inference generation. *Journal of Educational
+  Psychology*, 98(1), 182–197. https://doi.org/10.1037/0022-0663.98.1.182
 - Christ, R. E. (1975). Review and analysis of color coding research for
   visual displays. *Human Factors*, 17(6), 542–570.
   https://doi.org/10.1177/001872087501700602
@@ -226,12 +268,21 @@ and printed documents. The results below set the defaults.
   effects of age, typeface design, size and display polarity on glance
   legibility. *Ergonomics*, 59(10), 1377–1391.
   https://doi.org/10.1080/00140139.2015.1137637
+- Figl, K., Mendling, J., & Strembeck, M. (2013). The influence of notational
+  deficiencies on process model comprehension. *Journal of the Association
+  for Information Systems*, 14(6), 312–338. https://doi.org/10.17705/1jais.00335
+- Figl, K., & Strembeck, M. (2015). Findings from an experiment on flow
+  direction of business process models. *EMISA 2015*, Lecture Notes in
+  Informatics, 59–73. https://dl.gi.de/handle/20.500.12116/2037
 - Fitzsimmons, G., Weal, M. J., & Drieghe, D. (2019). The impact of
   hyperlinks on reading text. *PLOS ONE*, 14(2), e0210900.
   https://doi.org/10.1371/journal.pone.0210900
 - Fitzsimmons, G., Jayes, L. T., Weal, M. J., & Drieghe, D. (2020). The
   impact of skim reading and navigation when reading hyperlinks on the web.
   *PLOS ONE*, 15(9), e0239134. https://doi.org/10.1371/journal.pone.0239134
+- Ginns, P. (2006). Integrating information: A meta-analysis of the spatial
+  contiguity and temporal contiguity effects. *Learning and Instruction*,
+  16(6), 511–525. https://doi.org/10.1016/j.learninstruc.2006.10.001
 - Hannebauer, C., Hesenius, M., & Gruhn, V. (2018). Does syntax highlighting
   help programming novices? *Empirical Software Engineering*, 23(5),
   2795–2828. https://doi.org/10.1007/s10664-017-9579-0
@@ -249,6 +300,8 @@ and printed documents. The results below set the defaults.
 - ISO 999:1996. *Information and documentation: Guidelines for the content,
   organization and presentation of indexes.*
 - ISO 80000-1:2022. *Quantities and units, Part 1: General.*
+- ISO/IEC 19505-2:2012. *Information technology — Object Management Group
+  Unified Modeling Language (OMG UML) — Part 2: Superstructure.*
 - Kalyuga, S., Ayres, P., Chandler, P., & Sweller, J. (2003). The expertise
   reversal effect. *Educational Psychologist*, 38(1), 23–31.
   https://doi.org/10.1207/S15326985EP3801_4
@@ -263,6 +316,12 @@ and printed documents. The results below set the defaults.
 - Kong, Y., Seo, Y. S., & Zhai, L. (2018). Comparison of reading performance
   on screen and on paper: A meta-analysis. *Computers & Education*, 123,
   138–149. https://doi.org/10.1016/j.compedu.2018.05.005
+- Kummer, T.-F., Recker, J., & Mendling, J. (2016). Enhancing understandability
+  of process models through cultural-dependent color adjustments. *Decision
+  Support Systems*, 87, 1–12. https://doi.org/10.1016/j.dss.2016.04.004
+- Larkin, J. H., & Simon, H. A. (1987). Why a diagram is (sometimes) worth ten
+  thousand words. *Cognitive Science*, 11(1), 65–100.
+  https://doi.org/10.1111/j.1551-6708.1987.tb00863.x
 - Legge, G. E., & Bigelow, C. A. (2011). Does print size matter for reading?
   A review of findings from vision science and typography. *Journal of
   Vision*, 11(5):8. https://doi.org/10.1167/11.5.8
@@ -282,6 +341,18 @@ and printed documents. The results below set the defaults.
   good texts always better? Interactions of text coherence, background
   knowledge, and levels of understanding in learning from text. *Cognition
   and Instruction*, 14(1), 1–43. https://doi.org/10.1207/s1532690xci1401_1
+- Mendling, J., Reijers, H. A., & van der Aalst, W. M. P. (2010). Seven process
+  modeling guidelines (7PMG). *Information and Software Technology*, 52(2),
+  127–136. https://doi.org/10.1016/j.infsof.2009.08.004
+- Moody, D. (2009). The "physics" of notations: Toward a scientific basis for
+  constructing visual notations in software engineering. *IEEE Transactions
+  on Software Engineering*, 35(6), 756–779. https://doi.org/10.1109/TSE.2009.67
+- Moody, D., & van Hillegersberg, J. (2009). Evaluating the visual syntax of
+  UML: An analysis of the cognitive effectiveness of the UML family of
+  diagrams. *Software Language Engineering (SLE 2008)*, LNCS 5452, 16–34.
+  https://doi.org/10.1007/978-3-642-00434-6_3
+- Object Management Group (2017). *Unified Modeling Language (UML), version
+  2.5.1*. https://www.omg.org/spec/UML/2.5.1/
 - Okabe, M., & Ito, K. (2008). *Color Universal Design (CUD): How to make
   figures and presentations that are friendly to colorblind people.* Web
   resource. https://jfly.uni-koeln.de/color/
@@ -299,6 +370,9 @@ and printed documents. The results below set the defaults.
   readers' prior knowledge on the comprehension of hypertext.
   *International Journal of Human-Computer Studies*, 58(3), 327–345.
   https://doi.org/10.1016/S1071-5819(03)00016-8
+- Purchase, H. (1997). Which aesthetic has the greatest effect on human
+  understanding? *Graph Drawing '97*, LNCS 1353, 248–261.
+  https://doi.org/10.1007/3-540-63938-1_67
 - Rello, L., Pielot, M., & Marcos, M.-C. (2016). Make it big! The effect of
   font size and line spacing on online readability. *CHI '16*, 3637–3648.
   https://doi.org/10.1145/2858036.2858204

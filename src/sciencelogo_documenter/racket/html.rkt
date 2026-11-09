@@ -5,7 +5,7 @@
 ;; previews and the font switch; every page works without it.
 
 (require racket/file racket/list racket/path racket/string json
-         "code.rkt" "markup.rkt" "structure.rkt" "values.rkt")
+         "code.rkt" "diagram.rkt" "markup.rkt" "structure.rkt" "values.rkt")
 
 (provide render-site)
 
@@ -17,6 +17,7 @@
 (define (render-site doc settings site-dir static-dir fonts-dir)
   (define depth (or (get (or (get settings 'layout) (hasheq)) 'page_depth) 3))
   (define procedure-pages? (>= depth 3))
+  (define diagrams? (hash-ref (or (get settings 'layout) (hasheq)) 'diagrams #t))
   (define title (or (get settings 'title) (get doc 'title) "Workflow"))
 
   (define overview (page '(overview) title "Overview" "index.html" (get doc 'about) '()))
@@ -125,12 +126,28 @@
     (define next (and (< (add1 i) (length sequence)) (list-ref sequence (add1 i))))
     (define root (if (regexp-match? #rx"/" (page-url p)) "../" ""))
     (define ctx (context root target preview (make-hash)))
+    (define kind (car (page-key p)))
+    (define item
+      (case kind
+        [(overview) doc]
+        [(phase) (find-named (get doc 'phases) (cdr (page-key p)))]
+        [(stage) (find-named (get doc 'stages) (cdr (page-key p)))]
+        [(procedure) (find-named (get doc 'procedures) (cdr (page-key p)))]
+        [else #f]))
+    ;; The page's diagram, right after its summary.
+    (define d (and diagrams? item (page-diagram doc kind item)))
+    (define fig
+      (if d
+          (tag 'figure '((class . "diagram-figure"))
+               (tag 'div '((class . "diagram-scroll")) (diagram-svg d 'web target root settings))
+               (tag 'figcaption '() (esc (diagram-caption d))))
+          ""))
     (define body
-      (case (car (page-key p))
-        [(overview) (overview-body doc ctx procedure-pages?)]
-        [(phase) (phase-body doc (find-named (get doc 'phases) (cdr (page-key p))) ctx)]
-        [(stage) (stage-body doc (find-named (get doc 'stages) (cdr (page-key p))) ctx procedure-pages?)]
-        [(procedure) (procedure-body doc (find-named (get doc 'procedures) (cdr (page-key p))) ctx)]
+      (case kind
+        [(overview) (overview-body doc ctx procedure-pages? fig)]
+        [(phase) (phase-body doc item ctx fig)]
+        [(stage) (stage-body doc item ctx procedure-pages? fig)]
+        [(procedure) (procedure-body doc item ctx fig)]
         [(reference) (reference-body doc ctx)]))
     (define out (build-path site-dir (page-url p)))
     (make-directory* (path-only out))
@@ -299,7 +316,7 @@
                      ", ")))
    (if (get c 'into) (string-append ", into " (tag 'code '() (esc (get c 'into)))) "")))
 
-(define (overview-body doc ctx procedure-pages?)
+(define (overview-body doc ctx procedure-pages? fig)
   (section-start ctx)
   (define (outline-list nodes)
     (tag 'ul '()
@@ -392,6 +409,7 @@
                                     ""))))))))
   (string-append
    (about-block (get doc 'about))
+   fig
    (tag 'section '() (tag 'h2 '() "Method") outline)
    performers propositions requirements shared libraries))
 
@@ -413,10 +431,11 @@
                                        (string-join (map (lambda (i) (tag 'code '() (esc i))) (get p 'inputs)) ", ")))))
        (verbose-block ctx doc (get p 'verbose))))
 
-(define (phase-body doc ph ctx)
+(define (phase-body doc ph ctx fig)
   (section-start ctx)
   (string-append
    (about-block (get ph 'about))
+   fig
    (facts
     (list
      (cons "Contains"
@@ -429,7 +448,7 @@
                               (if about (string-append ": " (esc (about->plain about))) ""))))))))
    (verbose-block ctx doc (get ph 'verbose))))
 
-(define (stage-body doc s ctx procedure-pages?)
+(define (stage-body doc s ctx procedure-pages? fig)
   (section-start ctx)
   (define changes (if (get s 'paired) (state-changes (get s 'entry) (get s 'exit)) '()))
   (define calls (get s 'calls))
@@ -474,10 +493,10 @@
                                   (tag 'p '() "Inputs: "
                                        (string-join (map (lambda (i) (tag 'code '() (esc i))) (get p 'inputs)) ", "))))]
                         [else (tag 'p '() (tag 'code '() (esc name)))]))))))
-  (string-append (about-block (get s 'about)) fact-block used-blocks
+  (string-append (about-block (get s 'about)) fig fact-block used-blocks
                  (verbose-block ctx doc (get s 'verbose))))
 
-(define (procedure-body doc p ctx)
+(define (procedure-body doc p ctx fig)
   (section-start ctx)
   (define uses
     (append*
@@ -486,6 +505,7 @@
          (string-append (item ctx 'stage (get s 'name)) ": " (call-html ctx c))))))
   (string-append
    (about-block (get p 'about))
+   fig
    (facts
     (list
      (cons "Inputs" (if (null? (get p 'inputs)) #f

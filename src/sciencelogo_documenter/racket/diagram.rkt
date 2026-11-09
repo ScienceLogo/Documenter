@@ -204,8 +204,10 @@
         (format " class=\"~a\"" (if (eq? style 'code) "dg-code" "dg-text"))
         (format " font-family=\"~a\"" (esc (if (eq? style 'code) code-font text-font)))))
   (define (text x y s #:style [style 'text] #:size [size font] #:anchor [anchor "middle"])
-    (format "<text x=\"~a\" y=\"~a\" text-anchor=\"~a\" font-size=\"~a\"~a~a~a>~a</text>"
-            (num x) (num y) anchor size
+    ;; Text takes the ink colour: the palette's text colour on the web, in
+    ;; light and dark mode, and the print colour in the booklet.
+    (format "<text x=\"~a\" y=\"~a\" text-anchor=\"~a\" font-size=\"~a\" fill=\"~a\"~a~a~a>~a</text>"
+            (num x) (num y) anchor size ink
             (font-attr style)
             (if (eq? style 'bold) " font-weight=\"700\"" "")
             (if (eq? style 'italic) " font-style=\"italic\"" "")

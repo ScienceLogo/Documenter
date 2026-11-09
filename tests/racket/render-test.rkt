@@ -54,6 +54,9 @@
   (check-true (string-contains? html "<a href=\"../procedures/calculate-period.html\">"))
   (check-true (string-contains? html ">large-swing.elapsed</text>"))
   (check-true (string-contains? html ">large-swing.period</text>"))
+  ;; Text, lines and boxes take the page's palette, in light and dark mode.
+  (check-false (regexp-match? #rx"<text [^>]*fill=\"#" html))
+  (check-true (regexp-match? #rx"<text [^>]*fill=\"currentColor\"" html))
   ;; A stage without steps has no diagram.
   (check-false (string-contains? (page "stages/revise.html") "<svg")))
 

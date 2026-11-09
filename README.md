@@ -181,44 +181,26 @@ and printed documents. The results below set the defaults.
 - **Paper:** A4 by default, as the international standard (ISO 216); any
   other size, such as US Letter or A5, can be set.
 
-**Diagrams, on the website and in the booklet**
+**Diagrams**
 
-- **UML activity diagrams, as the standard notation:** each diagram uses a
-  subset of the UML activity diagram (Object Management Group, 2017; ISO/IEC
-  19505-2:2012): the activity frame, with input and output boxes on its
-  border; call actions, marked with a rake, for phases, stages and
-  procedures; arrows labelled with the values that flow; start and end
-  nodes; performers named in brackets above a step; and notes for units and
-  uncertainty. UML fixes the symbols and their meaning but leaves fonts,
-  colours and layout free, so the conventions below stay within the
-  standard.
-- **A small diagram on each page, at the page's level:** phases and stages
-  on the overview, the stages of a phase, the steps of a stage, the inputs
-  and output of a procedure. Simple diagrams that highlight structure support
-  learning (Larkin & Simon, 1987; Butcher, 2006), while large overview maps
-  did not reliably help (DeStefano & LeFevre, 2007; Potelle & Rouet, 2003),
-  and large process models are better split (Mendling, Reijers & van der
-  Aalst, 2010).
-- **Answers to UML's known weaknesses:** many UML symbols look alike, and its
-  diagrams quickly become cluttered (Moody & van Hillegersberg, 2009). Here
-  the category colours and type styles set stages, procedures and performers
-  apart on top of the standard shapes; each diagram keeps to one level and a
-  few elements; and the flow always runs left to right, with inputs on the
-  frame's left border and outputs on its right.
-- **Next to the text, with labels inside:** words placed close to the graphic
-  they describe give large learning gains (Ginns, 2006), so names sit in the
-  boxes and on the arrows, with no legend.
-- **Few shapes, each with one meaning, and no crossing lines:** clearly
-  distinct symbols improve comprehension (Moody, 2009; Figl, Mendling &
-  Strembeck, 2013), and edge crossings hurt it most (Purchase, 1997).
-  Left-to-right is the flow direction that theory favours (Figl & Strembeck,
-  2015).
-- **The standard fonts and colours:** the same fonts as the text, and the
-  category colours as thin markers on shapes that already differ, so the
-  diagram also prints in greyscale. Colour works best as a second cue (Moody,
-  2009; Kummer, Recker & Mendling, 2016).
-- **A text alternative:** the page's facts state the same content, and the
-  diagram carries a short description (WCAG 2.2).
+- **UML activity diagrams:** a subset of the standard notation (Object
+  Management Group, 2017; ISO/IEC 19505-2:2012), which leaves fonts, colours
+  and layout free.
+- **One small diagram per page, at its level:** simple diagrams support
+  learning (Larkin & Simon, 1987; Butcher, 2006), large overview maps did not
+  reliably help (DeStefano & LeFevre, 2007), and large models are better
+  split (Mendling et al., 2010).
+- **Next to the text, with labels inside:** words close to the graphic they
+  describe give large learning gains (Ginns, 2006).
+- **Few distinct shapes, no crossing lines:** distinct symbols improve
+  comprehension (Moody, 2009; Figl et al., 2013), and crossings hurt it most
+  (Purchase, 1997).
+- **Left to right, inputs on the left and outputs on the right:** the flow
+  direction that theory favours (Figl & Strembeck, 2015).
+- **Categories marked by type style and colour:** they set apart UML's
+  look-alike symbols (Moody & van Hillegersberg, 2009), with colour as a
+  second cue, as on the website (Kummer et al., 2016).
+- **A text alternative,** as WCAG 2.2 requires.
 
 ### References
 
